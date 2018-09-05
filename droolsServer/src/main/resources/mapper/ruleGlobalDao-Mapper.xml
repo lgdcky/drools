@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.server.dao.RuleGlobalDao">
+    <resultMap id="RuleGlobal" type="com.server.model.RuleGlobal">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="rule_id" property="rule_id" jdbcType="BIGINT"/>
+        <result column="globalName" property="globalName" jdbcType="VARCHAR" />
+        <result column="globalType" property="globalType" jdbcType="VARCHAR" />
+        <result column="create_time" property="create_time" jdbcType="DATE" />
+    </resultMap>
+
+    <sql id="RuleGlobal_Column_List">
+        id, rule_id,globalName,globalType,create_time
+    </sql>
+
+    <insert id="saveRuleGlobal" flushCache="true">
+        INSERT INTO ruleGlobal(rule_id,globalName,globalType,create_time)
+        VALUES (
+        #{rule_id},
+        #{globalName},
+        #{globalType},
+        #{create_time}
+        )
+    </insert>
+
+    <select id="findRuleGlobalByParameter" parameterType="com.server.model.RuleGlobal" resultMap="RuleGlobal" flushCache="true">
+        SELECT
+        <include refid="RuleGlobal_Column_List"/>
+        FROM ruleGlobal
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </select>
+
+    <delete id="deleteRuleGlobalByParameter" parameterType="com.server.model.RuleGlobal">
+        DELETE FROM
+        ruleGlobal
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </delete>
+
+    <update id="updateRuleGlobalByParameter" parameterType="com.server.model.RuleGlobal">
+        UPDATE
+        ruleGlobal
+        SET
+        globalName = #{globalName},
+        globalType = #{globalType}
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </update>
+</mapper>
