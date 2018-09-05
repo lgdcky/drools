@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.server.dao.RuleConditionDao">
+    <resultMap id="RuleCondition" type="com.server.model.RuleCondition">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="ruleInfo_id" property="ruleInfo_id" jdbcType="BIGINT"/>
+        <result column="conditionKey" property="conditionKey" jdbcType="VARCHAR" />
+        <result column="op" property="op" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="conditionValue" property="conditionValue" jdbcType="VARCHAR" />
+        <result column="associationType" property="associationType" jdbcType="VARCHAR" />
+        <result column="create_time" property="create_time" jdbcType="DATE" />
+    </resultMap>
+
+    <sql id="RuleCondition_Column_List">
+        id, ruleInfo_id,conditionKey,op,conditionValue,associationType,type,paramType,create_time
+    </sql>
+
+    <insert id="saveRuleCondition" flushCache="true">
+        INSERT INTO ruleCondition(ruleInfo_id,conditionKey,op,conditionValue,associationType,type,paramType,create_time)
+        VALUES (
+        #{ruleInfo_id},
+        #{conditionKey},
+        #{op},
+        #{conditionValue},
+        #{associationType},
+        #{type},
+        #{paramType},
+        #{create_time}
+        )
+    </insert>
+
+    <select id="findRuleConditionByParameter" parameterType="com.server.model.RuleCondition" resultMap="RuleCondition" flushCache="true">
+        SELECT
+        <include refid="RuleCondition_Column_List"/>
+        FROM ruleCondition
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="ruleInfo_id!=null">
+            and ruleInfo_id =#{ruleInfo_id}
+        </if>
+    </select>
+
+    <delete id="deleteRuleConditionByParameter" parameterType="com.server.model.RuleCondition">
+        DELETE FROM
+        ruleCondition
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="ruleInfo_id!=null">
+            and ruleInfo_id =#{ruleInfo_id}
+        </if>
+    </delete>
+
+    <update id="updateRuleConditionByParameter" parameterType="com.server.model.RuleCondition">
+        UPDATE
+        ruleCondition
+        SET
+        ruleInfo_id = #{ruleInfo_id},
+        conditionKey = #{conditionKey},
+        op = #{op},
+        conditionValue = #{conditionValue},
+        associationType = #{associationType},
+        paramType = #{paramType}
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="ruleInfo_id!=null">
+            and ruleInfo_id =#{ruleInfo_id}
+        </if>
+    </update>
+</mapper>

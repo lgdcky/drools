@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.server.dao.RuleInfoDao">
+    <resultMap id="RuleInfo" type="com.server.model.RuleInfo">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="rule_id" property="rule_id" jdbcType="BIGINT"/>
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="parent" property="parent" jdbcType="VARCHAR" />
+        <result column="obj" property="obj" jdbcType="VARCHAR" />
+        <result column="calculation" property="calculation" jdbcType="VARCHAR" />
+        <result column="attribute" property="attribute" jdbcType="VARCHAR" />
+        <result column="create_time" property="create_time" jdbcType="DATE" />
+        <collection property="ruleConditions" ofType="com.server.model.RuleCondition">
+            <id column="c_id" property="id" jdbcType="BIGINT"/>
+            <result column="ruleInfo_id" property="ruleInfo_id" jdbcType="BIGINT"/>
+            <result column="conditionKey" property="conditionKey" jdbcType="VARCHAR"/>
+            <result column="op" property="op" jdbcType="VARCHAR"/>
+            <result column="conditionValue" property="conditionValue" jdbcType="VARCHAR"/>
+            <result column="associationType" property="associationType" jdbcType="VARCHAR"/>
+            <result column="type" property="type" jdbcType="VARCHAR"/>
+            <result column="create_time" property="create_time" jdbcType="DATE"/>
+        </collection>
+    </resultMap>
+
+    <sql id="RuleInfo_Column_List">
+        i.id as i_id, i.rule_id,i.type,i.parent,i.obj,i.calculation,i.attribute,i.create_time,
+        c.id as c_id, c.ruleInfo_id,c.conditionKey,c.op,c.conditionValue,c.associationType,c.type,c.create_time
+    </sql>
+
+    <insert id="saveRuleInfo" flushCache="true" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ruleInfo(rule_id,type,parent,obj,calculation,attribute,create_time)
+        VALUES (
+        #{rule_id},
+        #{type},
+        #{parent},
+        #{obj},
+        #{calculation},
+        #{attribute},
+        #{create_time}
+        )
+    </insert>
+
+    <select id="findRuleInfoByParameter" parameterType="com.server.model.RuleInfo" resultMap="RuleInfo" flushCache="true">
+        SELECT
+        <include refid="RuleInfo_Column_List"/>
+        FROM ruleInfo i,ruleCondition c
+        WHERE
+        1=1
+        <if test="id!=null">
+            and i.id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and i.rule_id =#{rule_id}
+        </if>
+    </select>
+
+    <delete id="deleteRuleInfoByParameter" parameterType="com.server.model.RuleInfo">
+        DELETE FROM
+        ruleInfo
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </delete>
+
+    <update id="updateRuleInfoByParameter" parameterType="com.server.model.RuleInfo">
+        UPDATE
+        ruleInfo
+        SET
+        rule_id = #{rule_id},
+        type = #{type},
+        parent = #{parent},
+        obj = #{obj},
+        calculation = #{calculation},
+        attribute = #{attribute}
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </update>
+</mapper>

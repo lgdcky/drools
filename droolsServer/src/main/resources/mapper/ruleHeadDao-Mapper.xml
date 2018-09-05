@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.server.dao.RuleHeadDao">
+    <resultMap id="RuleHead" type="com.server.model.RuleHead">
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="packageName" property="packageName" jdbcType="VARCHAR" />
+        <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+        <result column="ruleName" property="ruleName" jdbcType="VARCHAR"/>
+        <result column="ruleString" property="ruleString" jdbcType="VARCHAR" />
+        <result column="state" property="state" jdbcType="VARCHAR" />
+        <result column="create_Time" property="create_Time" jdbcType="DATE" />
+    </resultMap>
+
+    <sql id="RuleHead_Column_List" >
+        id, packageName,remarks,ruleName,ruleString,state,create_Time
+    </sql>
+
+    <insert id="saveRuleHead" flushCache="true" useGeneratedKeys="true" keyProperty="id">
+            INSERT INTO ruleHead(packageName,remarks,ruleName,ruleString,state,create_Time)
+            VALUES (
+            #{packageName},
+            #{remarks},
+            #{ruleName},
+            #{ruleString},
+            #{state},
+		    #{create_Time}
+            )
+    </insert>
+
+    <select id="findAllRuleHeads" parameterType="list" resultMap="RuleHead" flushCache="true">
+            SELECT
+            <include refid="RuleHead_Column_List" />
+            FROM ruleHead
+    </select>
+
+    <select id="findRuleHead" parameterType="java.lang.Long" resultMap="RuleHead" flushCache="true">
+            SELECT
+            <include refid="RuleHead_Column_List" />
+            FROM ruleHead
+            WHERE id = #{id}
+    </select>
+
+    <delete id="deleteRuleHeadByParameter" parameterType="java.lang.Long">
+        DELETE FROM
+        ruleHead
+        WHERE
+        id =#{id}
+    </delete>
+    
+    <update id="updateRuleHeadByParameter" parameterType="com.server.model.RuleHead">
+        UPDATE
+        ruleHead
+        SET
+        packageName = #{packageName},
+        remarks = #{remarks},
+        ruleName = #{ruleName},
+        ruleString = #{ruleString},
+        state = #{state}
+        WHERE
+        id = #{id}
+    </update>
+
+</mapper>

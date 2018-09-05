@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.server.dao.RuleOpDao">
+    <resultMap id="RuleOp" type="com.server.model.RuleOp">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="rule_id" property="rule_id" jdbcType="BIGINT"/>
+        <result column="objName" property="objName" jdbcType="VARCHAR"/>
+        <result column="attribute" property="attribute" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="value" property="value" jdbcType="VARCHAR"/>
+        <result column="create_time" property="create_time" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="RuleOp_Column_List">
+        id, rule_id,objName,attribute,value,type,create_time
+    </sql>
+
+    <insert id="saveRuleOp" flushCache="true">
+        INSERT INTO ruleOp(rule_id,objName,attribute,value,type,create_time)
+        VALUES (
+        #{rule_id},
+        #{objName},
+        #{attribute},
+        #{value},
+        #{type},
+        #{create_time}
+        )
+    </insert>
+
+    <select id="findRuleOpByParameter" parameterType="com.server.model.RuleOp" resultMap="RuleOp" flushCache="true">
+        SELECT
+        <include refid="RuleOp_Column_List"/>
+        FROM ruleOp
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </select>
+
+    <delete id="deleteRuleOpByParameter" parameterType="com.server.model.RuleOp">
+        DELETE FROM
+        ruleOp
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </delete>
+
+    <update id="updateRuleOpByParameter" parameterType="com.server.model.RuleOp">
+        UPDATE
+        ruleOp
+        SET
+        rule_id = #{rule_id},
+        objName = #{objName},
+        attribute = #{attribute},
+        value = #{value},
+        type = #{type}
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+    </update>
+
+</mapper>
