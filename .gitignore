@@ -4,3 +4,9 @@ droolsServer/target/
 droolsServer/droolsServer\.iml
 
 droolsServer/\.idea/
+
+droolsServer/
+
+droolsClient/\.idea/
+
+droolsClient/droolsClient\.iml

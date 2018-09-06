@@ -1,16 +1,22 @@
 package com.server.rpc;
 
 
+import com.alibaba.fastjson.JSON;
 import com.server.rpc.event.ExceptionHandler;
 import com.server.tools.CompressTool;
+import org.jboss.netty.buffer.BigEndianHeapChannelBuffer;
+import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.DynamicChannelBuffer;
 import org.jboss.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,23 +42,14 @@ public class RPCServerHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        Object o = e.getMessage();
-        if (! (o instanceof ChannelBuffer)) {
-            ctx.sendUpstream(e);
+        ChannelBuffer buffer = (ChannelBuffer)e.getMessage();
+        if(buffer.array().length<=0){
             return;
         }
-
-        ChannelBuffer input = (ChannelBuffer) o;
-        int readable = input.readableBytes();
-        if (readable <= 0) {
-            return;
-        }
-
-        bufferSize+=readable;
-        list.add(bufferSize);
-
-        System.out.println("end   "+list.size());
-        super.messageReceived(ctx, e);
+        String JsonString = new String(CompressTool.uncompresss(buffer.array()));
+        ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(CompressTool.compresss(JsonString.getBytes())));
+        ctx.getChannel().write(buffer);
+        buffer.clear();
     }
 
     /**

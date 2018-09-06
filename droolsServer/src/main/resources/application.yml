@@ -30,22 +30,23 @@ logging:
   level:
     org.springframework: ERROR
     com.server: DEBUG
+    org.jboss.netty: DEBUG
 
 netty:
   server:
     name: droolsServerSocket
     port: 8092
-    readTime: 5
-    writeTime: 5
+    readTime: 15
+    writeTime: 15
     idleTime: 0
-    idleReadTime: 5
-    idleWriteTime: 5
+    idleReadTime: 10
+    idleWriteTime: 10
   bueffer:
     maxFrameLength: 20971520 #一次性最大传输体积20M
     lengthFieldOffset: 0
-    lengthFieldLength: 1
+    lengthFieldLength: 4
     lengthAdjustment: 0
-    initialBytesToStrip: 1
+    initialBytesToStrip: 4
 
 droolsconfig:
   kieBaseconfiguration:

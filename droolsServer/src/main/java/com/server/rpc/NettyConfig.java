@@ -1,9 +1,7 @@
 package com.server.rpc;
 
 
-import com.server.rpc.thread.NamedThreadFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
@@ -18,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
@@ -29,11 +26,6 @@ import java.util.concurrent.Executors;
  */
 @Configuration
 public class NettyConfig {
-
-    public static final String IO_THREADS_KEY = "iothreads";
-
-    public static final int DEFAULT_IO_THREADS = Runtime.getRuntime()
-            .availableProcessors() + 1;
 
     @Autowired
     private RPCBufferConfig rpcBufferConfig;
@@ -52,11 +44,14 @@ public class NettyConfig {
             channelPipeline.addLast("hearbeat", new Heartbeat());
             channelPipeline.addLast("readTimeout", new ReadTimeoutHandler(new HashedWheelTimer(), rpcServerConfig.getReadTime()));
             channelPipeline.addLast("writeTimeout", new WriteTimeoutHandler(new HashedWheelTimer(), rpcServerConfig.getWriteTime()));
-            channelPipeline.addLast("decoder", new LengthFieldBasedFrameDecoder(rpcBufferConfig.getMaxFrameLength(), rpcBufferConfig.getLengthFieldOffset(), rpcBufferConfig.getLengthFieldLength(), rpcBufferConfig.getLengthAdjustment(), rpcBufferConfig.getInitialBytesToStrip()));
+            channelPipeline.addLast("decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, rpcBufferConfig.getLengthFieldOffset(), rpcBufferConfig.getLengthFieldLength(), rpcBufferConfig.getLengthAdjustment(), rpcBufferConfig.getInitialBytesToStrip()));
             channelPipeline.addLast("encoder", new LengthFieldPrepender(4, false));
             channelPipeline.addLast("rpcServerHandler", new RPCServerHandler());
             return channelPipeline;
         });
+
+        serverBootstrap.setOption("child.keepAlive", false);
+        serverBootstrap.setOption("child.tcpNoDelay", true);
 
         return serverBootstrap;
     }
