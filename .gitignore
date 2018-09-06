@@ -5,6 +5,13 @@ droolsServer/droolsServer\.iml
 
 droolsServer/\.idea/
 
+
 droolsClient/\.idea/
 
 droolsClient/droolsClient\.iml
+
+nettyclient/\.idea/
+
+nettyclient/target/
+
+nettyclient/nettyclient\.iml
