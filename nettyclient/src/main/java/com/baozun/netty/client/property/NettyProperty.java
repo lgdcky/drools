@@ -32,6 +32,8 @@ public class NettyProperty {
 
     private Integer idleTime;
 
+    private Integer timeout;
+
     public Integer getMaxFrameLength() {
         return maxFrameLength;
     }
@@ -126,5 +128,13 @@ public class NettyProperty {
 
     public void setIp(String ip) {
         this.ip = ip;
+    }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
     }
 }

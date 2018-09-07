@@ -4,10 +4,14 @@ import com.baozun.netty.client.tools.CompressTool;
 import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.*;
+import org.jboss.netty.handler.timeout.IdleState;
+import org.jboss.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,13 +32,14 @@ public class RPCClientHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        ChannelBuffer buffer = (ChannelBuffer)e.getMessage();
-        if(buffer.array().length<=0){
+        ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
+        if (buffer.array().length <= 0) {
             return;
         }
+        System.out.println(buffer.array().length);
         String JsonString = new String(CompressTool.uncompresss(buffer.array()));
-        System.out.println(JsonString.length()+"dddddddddddddddd");
-        ctx.getChannel().write(buffer);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
+        System.out.println(formatter.format(new Date()) + "   end");
     }
 
     /**
@@ -87,5 +92,4 @@ public class RPCClientHandler extends SimpleChannelHandler {
         logger.debug("the new connection was Closed");
         super.channelClosed(ctx, e);
     }
-
 }

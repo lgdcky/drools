@@ -9,14 +9,19 @@ import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.DynamicChannelBuffer;
 import org.jboss.netty.channel.*;
+import org.jboss.netty.handler.timeout.IdleState;
+import org.jboss.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.server.tools.CompressTool.compresss;
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,13 +47,16 @@ public class RPCServerHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        ChannelBuffer buffer = (ChannelBuffer)e.getMessage();
-        if(buffer.array().length<=0){
+        Channel channel = ctx.getChannel();
+        ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
+        if (buffer.array().length <= 0) {
             return;
         }
+        System.out.println(buffer.array().length);
         String JsonString = new String(CompressTool.uncompresss(buffer.array()));
-        ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(CompressTool.compresss(JsonString.getBytes())));
-        ctx.getChannel().write(buffer);
+        ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(JsonString.getBytes())));
+        channel.write(buffer);
+        System.out.println(channel.getId()+"    id");
         buffer.clear();
     }
 
@@ -102,5 +110,33 @@ public class RPCServerHandler extends SimpleChannelHandler {
     public void channelClosed(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
         logger.debug("the new connection was Closed");
         super.channelClosed(ctx, e);
+    }
+
+    /**
+     * {@inheritDoc}  Down-casts the received upstream event into more
+     * meaningful sub-type event and calls an appropriate handler method with
+     * the down-casted event.
+     *
+     * @param ctx
+     * @param e
+     */
+    @Override
+    public void handleUpstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
+        if (e instanceof IdleStateEvent) {
+            if (((IdleStateEvent) e).getState() == IdleState.ALL_IDLE) {
+                logger.warn("Time out,connection will close");
+                ctx.getChannel().close();
+            }
+            if (((IdleStateEvent) e).getState() == IdleState.READER_IDLE) {
+                logger.warn("Reader Time out,connection will close");
+                ctx.getChannel().close();
+            }
+            if (((IdleStateEvent) e).getState() == IdleState.WRITER_IDLE) {
+                logger.warn("Writer Time out,connection will close");
+                ctx.getChannel().close();
+            }
+        } else {
+            super.handleUpstream(ctx, e);
+        }
     }
 }

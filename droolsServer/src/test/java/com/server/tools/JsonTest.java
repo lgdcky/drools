@@ -40,7 +40,7 @@ public class JsonTest extends TestNgBase {
 
         long start = System.currentTimeMillis();
         String fJson = JSON.toJSONString(odoCommands, SerializerFeature.WriteMapNullValue);
-        //System.out.println("fjson bean to json--------------" + (System.currentTimeMillis() - start));
+        System.out.println("fjson bean to json--------------" + (System.currentTimeMillis() - start));
 
         System.out.println(fJson.getBytes().length);
 

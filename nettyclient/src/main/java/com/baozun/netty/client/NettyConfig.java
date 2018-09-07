@@ -45,21 +45,18 @@ public class NettyConfig {
                 ChannelPipeline channelPipeline = Channels.pipeline();
                 // 进行包装
                 channelPipeline.addLast("timeout", new IdleStateHandler(new HashedWheelTimer(), nettyProperty.getIdleReadTime(), nettyProperty.getWriteTime(), nettyProperty.getIdleTime()));
-                channelPipeline.addLast("hearbeat", new Heartbeat());
-                channelPipeline.addLast("readTimeout", new ReadTimeoutHandler(new HashedWheelTimer(), nettyProperty.getReadTime()));
-                channelPipeline.addLast("writeTimeout", new WriteTimeoutHandler(new HashedWheelTimer(), nettyProperty.getWriteTime()));
                 channelPipeline.addLast("decoder", new LengthFieldBasedFrameDecoder(nettyProperty.getMaxFrameLength(), nettyProperty.getLengthFieldOffset(), nettyProperty.getLengthFieldLength(), nettyProperty.getLengthAdjustment(), nettyProperty.getInitialBytesToStrip()));
                 channelPipeline.addLast("encoder", new LengthFieldPrepender(4, false));
                 channelPipeline.addLast("rpcServerHandler", new RPCClientHandler());
                 return channelPipeline;
             }
         });
-
+        clientBootstrap.setOption("connectTimeoutMillis", nettyProperty.getTimeout());
         return clientBootstrap;
     }
 
     public InetSocketAddress tcpPort() {
-        return new InetSocketAddress(nettyProperty.getIp(),nettyProperty.getPort());
+        return new InetSocketAddress(nettyProperty.getIp(), nettyProperty.getPort());
     }
 
 }

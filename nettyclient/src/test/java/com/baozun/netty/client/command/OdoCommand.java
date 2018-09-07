@@ -1,5 +1,6 @@
 package com.baozun.netty.client.command;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Time: 9:57 AM
  */
 
-public class OdoCommand{
+public class OdoCommand implements Serializable {
     private static final long serialVersionUID = 5523630809017120661L;
     private String odoCode;
     private String extCode;

@@ -26,6 +26,8 @@ public class RPCServerConfig {
 
     private Integer idleTime;
 
+    private Integer timeout;
+
     public Integer getReadTime() {
         return readTime;
     }
@@ -72,5 +74,13 @@ public class RPCServerConfig {
 
     public void setIdleWriteTime(Integer idleWriteTime) {
         this.idleWriteTime = idleWriteTime;
+    }
+
+    public Integer getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(Integer timeout) {
+        this.timeout = timeout;
     }
 }

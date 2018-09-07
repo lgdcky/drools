@@ -1,10 +1,15 @@
 package com.baozun.netty.client.command;
 
-import org.jboss.netty.buffer.BigEndianHeapChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffer;
+import com.alibaba.fastjson.JSON;
+import com.baozun.netty.client.tools.CompressTool;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -14,7 +19,8 @@ import java.util.List;
  */
 public class RuleCommand<T> {
 
-    private static final Integer DEFAULTSEGMENTATIONNUM = 5000;
+    //默认以3M大小为分割数组标准,只能保证划分的包在3M左右
+    private static final Integer DEFAULTSEGMENTATIO = 3 * 1024 * 1024;
 
     //规则适用组
     private String group;
@@ -51,7 +57,7 @@ public class RuleCommand<T> {
 
     public Integer getSegmentationNum() {
         if (null == this.segmentationNum) {
-            return DEFAULTSEGMENTATIONNUM;
+            return DEFAULTSEGMENTATIO;
         }
         return segmentationNum;
     }
@@ -60,30 +66,84 @@ public class RuleCommand<T> {
         this.segmentationNum = segmentationNum;
     }
 
-    public List<RuleCommand> getRuleCommandList() {
-        if(null==this.factList && this.factList.size()<=0)
-            return null;
-        List<RuleCommand> ruleCommands = new ArrayList<>();
-        List<T> list;
-        int count = (int)Math.ceil(((double)this.factList.size())/DEFAULTSEGMENTATIONNUM);
-        int size = 0;
-        for (int i=0;i<count;i++){
-            size = i*this.getSegmentationNum()<=this.factList.size()?DEFAULTSEGMENTATIONNUM:this.factList.size()-((count-i)*DEFAULTSEGMENTATIONNUM);
-            list = new ArrayList<>(size);
-            RuleCommand ruleCommand = new RuleCommand();
-            ruleCommand.setGroup(this.getGroup());
-            System.arraycopy(this.factList,i,list,0,size);
-            ruleCommand.setFactList(list);
-            ruleCommands.add(ruleCommand);
-        }
-        return ruleCommands;
-    }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<Map<String, Object[]>> getRuleCommandList() throws Exception {
+        if (null == this.factList && this.factList.size() <= 0)
+            return null;
+        List<Map<String, Object[]>> dataList = new ArrayList<>();
+        Object[] array;
+        int faceCount = this.factList.size();
+        byte[] bytes = convertToBytes(this.factList);
+        System.out.println(bytes.length+"  init");
+        Integer count = calculatePartitionValuesUp(bytes.length, this.getSegmentationNum());
+        if (null == count)
+            throw new RuntimeException("convert data error!the converted data must be not null!");
+        Integer remainder = faceCount % count;
+        Integer size = 0;
+        if (remainder == 0) {
+            size = faceCount / count;
+        } else {
+            size = (faceCount - remainder) / count;
+            count++;
+        }
+        setRuleCommandGroup(dataList, count, remainder, size);
+        return dataList;
+    }
+
+    private void setRuleCommandGroup(List<Map<String, Object[]>> dataList, Integer count, Integer remainderNum, Integer size) {
+        Object[] array;
+        Map<String, Object[]> map = null;
+        Object[] dataArray = this.factList.toArray();
+        Object[] param = new Object[]{this.group, this.type};
+        if (remainderNum == 0) {
+            for (int i = 0; i < count; i++) {
+                map = new HashMap<>();
+                array = new Object[size];
+                map.put("param", param);
+                System.arraycopy(dataArray, i * size, array, 0, size);
+                map.put("data", array);
+                dataList.add(map);
+                map = null;
+            }
+        } else {
+            for (int i = 0; i < count - 1; i++) {
+                map = new HashMap<>();
+                array = new Object[size];
+                map.put("param", param);
+                System.arraycopy(dataArray, i * size, array, 0, size);
+                map.put("data", array);
+                dataList.add(map);
+                map = null;
+            }
+            map = new HashMap<>();
+            array = new Object[remainderNum];
+            map.put("param", param);
+            System.arraycopy(dataArray, (count - 1) * size, array, 0, remainderNum);
+            map.put("data", array);
+            dataList.add(map);
+            map = null;
+        }
+    }
+
+    //计算分割数量
+    private static final Integer calculatePartitionValuesUp(Integer numerator, Integer denominator) {
+        if (null == numerator && null == denominator && denominator > 0)
+            return null;
+        Integer segmentatioNum = 0;
+        segmentatioNum = (int) Math.ceil(((double) numerator) / denominator);
+        return segmentatioNum;
+    }
+
+    //获取压缩后体积
+    private final byte[] convertToBytes(Object factList) throws IOException {
+        String fJson = JSON.toJSONString(factList);
+        return CompressTool.compresss(fJson.getBytes());
     }
 }

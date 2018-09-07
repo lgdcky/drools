@@ -42,8 +42,6 @@ public class NettyConfig {
             ChannelPipeline channelPipeline = Channels.pipeline();
             channelPipeline.addLast("timeout", new IdleStateHandler(new HashedWheelTimer(), rpcServerConfig.getIdleReadTime(), rpcServerConfig.getWriteTime(), rpcServerConfig.getIdleTime()));
             channelPipeline.addLast("hearbeat", new Heartbeat());
-            channelPipeline.addLast("readTimeout", new ReadTimeoutHandler(new HashedWheelTimer(), rpcServerConfig.getReadTime()));
-            channelPipeline.addLast("writeTimeout", new WriteTimeoutHandler(new HashedWheelTimer(), rpcServerConfig.getWriteTime()));
             channelPipeline.addLast("decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, rpcBufferConfig.getLengthFieldOffset(), rpcBufferConfig.getLengthFieldLength(), rpcBufferConfig.getLengthAdjustment(), rpcBufferConfig.getInitialBytesToStrip()));
             channelPipeline.addLast("encoder", new LengthFieldPrepender(4, false));
             channelPipeline.addLast("rpcServerHandler", new RPCServerHandler());

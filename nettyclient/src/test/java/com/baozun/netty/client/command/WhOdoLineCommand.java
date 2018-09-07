@@ -1,5 +1,6 @@
 package com.baozun.netty.client.command;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -8,7 +9,7 @@ import java.util.Date;
  * Date: 6/6/18
  * Time: 9:58 AM
  */
-public class WhOdoLineCommand{
+public class WhOdoLineCommand implements Serializable {
     private static final long serialVersionUID = -2071411398425434080L;
     private Long odoId;
     private Integer linenum;

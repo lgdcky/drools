@@ -18,7 +18,7 @@ public class ExceptionHandler {
 
     public static final void exceptionHandle(ChannelHandlerContext ctx, ExceptionEvent e){
         if(e.getCause() instanceof ReadTimeoutException){
-            logger.warn("channel will be close!load data failed!");
+            logger.warn("channel will be close!");
             ctx.getChannel().close();
         }else{
             logger.warn("unknow failed!");

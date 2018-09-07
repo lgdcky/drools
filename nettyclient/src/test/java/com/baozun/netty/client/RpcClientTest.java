@@ -13,7 +13,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -36,11 +35,11 @@ public class RpcClientTest {
 
         RPCClient rpcClient = initClient();
 
-        List<OdoCommand> odoCommands = new ArrayList<>();
+        List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
         for (int i = 0; i < 5000; i++) {
             odoCommands.add(dataBuilder(i));
         }
-        Map<String, List<OdoCommand>> map = new HashMap<>();
+        Map<String, List<OdoCommand>> map = new HashMap<String, List<OdoCommand>>();
         map.put("test", odoCommands);
 
         String fJson = JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
@@ -49,7 +48,7 @@ public class RpcClientTest {
         System.out.println(fJson.getBytes().length + "a");
         byte[] bytes = CompressTool.compresss(fJson.getBytes());
 
-        List<ChannelBuffer> channelBuffers = new ArrayList<>();
+        List<ChannelBuffer> channelBuffers = new ArrayList<ChannelBuffer>();
 
 
         int count = (int) Math.ceil(((double) bytes.length) / DEFAULT_BUFFER_SIZE);
@@ -60,7 +59,7 @@ public class RpcClientTest {
             ChannelBuffer buffer_c = new BigEndianHeapChannelBuffer(DEFAULT_BUFFER_SIZE);
             size = i * DEFAULT_BUFFER_SIZE < bytes.length ? DEFAULT_BUFFER_SIZE : bytes.length - ((i - 1) * DEFAULT_BUFFER_SIZE);
             byte[] bytesdest = new byte[size];
-            System.arraycopy(bytes, i, bytesdest, 0, size);
+            System.arraycopy(bytes, i * DEFAULT_BUFFER_SIZE, bytesdest, 0, size);
             buffer_c.writeBytes(bytesdest);
             channelBuffers.add(buffer_c);
         }
@@ -118,7 +117,7 @@ public class RpcClientTest {
         odoCommand.setCustomerId(Long.valueOf(new Random().nextInt(2)));
         odoCommand.setOdoIndex(String.valueOf(new Random().nextInt(2)));
         odoCommand.setActualQty(Double.parseDouble(String.valueOf(new Random().nextInt(10))));
-        List<WhOdoLineCommand> whOdoLineCommands = new ArrayList<>();
+        List<WhOdoLineCommand> whOdoLineCommands = new ArrayList<WhOdoLineCommand>();
         WhOdoLineCommand whOdoLineCommand1 = new WhOdoLineCommand();
         whOdoLineCommand1.setQty(Double.parseDouble(t));
         whOdoLineCommand1.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
