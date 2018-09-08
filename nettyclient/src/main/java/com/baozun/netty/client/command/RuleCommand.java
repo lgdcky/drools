@@ -2,6 +2,8 @@ package com.baozun.netty.client.command;
 
 import com.alibaba.fastjson.JSON;
 import com.baozun.netty.client.tools.CompressTool;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -81,17 +83,22 @@ public class RuleCommand<T> {
         Object[] array;
         int faceCount = this.factList.size();
         byte[] bytes = convertToBytes(this.factList);
-        System.out.println(bytes.length+"  init");
         Integer count = calculatePartitionValuesUp(bytes.length, this.getSegmentationNum());
         if (null == count)
             throw new RuntimeException("convert data error!the converted data must be not null!");
-        Integer remainder = faceCount % count;
         Integer size = 0;
+        Integer remainder = faceCount % count;
+
         if (remainder == 0) {
             size = faceCount / count;
         } else {
-            size = (faceCount - remainder) / count;
-            count++;
+            if (faceCount < count) {
+                size = faceCount;
+                remainder = 0;
+            } else {
+                size = (faceCount - remainder) / count;
+                count++;
+            }
         }
         setRuleCommandGroup(dataList, count, remainder, size);
         return dataList;
@@ -146,4 +153,5 @@ public class RuleCommand<T> {
         String fJson = JSON.toJSONString(factList);
         return CompressTool.compresss(fJson.getBytes());
     }
+
 }

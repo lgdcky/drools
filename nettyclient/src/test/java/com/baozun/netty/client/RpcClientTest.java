@@ -1,9 +1,10 @@
 package com.baozun.netty.client;
-
+/*
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.serializer.SerializerFeature;*/
 import com.baozun.netty.client.command.OdoCommand;
 import com.baozun.netty.client.command.WhOdoLineCommand;
+import com.baozun.netty.client.manager.MessageHandleManagerImpl;
 import com.baozun.netty.client.property.NettyProperty;
 import com.baozun.netty.client.tools.CompressTool;
 import org.jboss.netty.buffer.*;
@@ -42,7 +43,8 @@ public class RpcClientTest {
         Map<String, List<OdoCommand>> map = new HashMap<String, List<OdoCommand>>();
         map.put("test", odoCommands);
 
-        String fJson = JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
+        String fJson = "";
+        //String fJson = JSON.toJSONString(map, SerializerFeature.WriteMapNullValue);
         long start = System.currentTimeMillis();
         System.out.println(fJson.length());
         System.out.println(fJson.getBytes().length + "a");
@@ -87,7 +89,7 @@ public class RpcClientTest {
     public static RPCClient initClient() {
         NettyProperty nettyProperty = new NettyProperty();
         nettyProperty.setIdleReadTime(20);
-        nettyProperty.setIdleTime(0);
+        nettyProperty.setIdleTime(10);
         nettyProperty.setIdleWriteTime(20);
         nettyProperty.setInitialBytesToStrip(4);
         nettyProperty.setLengthAdjustment(0);
@@ -97,11 +99,11 @@ public class RpcClientTest {
         nettyProperty.setPort(8092);
         nettyProperty.setReadTime(20);
         nettyProperty.setWriteTime(20);
-        nettyProperty.setIp("localhost");
+        nettyProperty.setIp("127.0.0.1");
 
         NettyConfig config = new NettyConfig();
         config.setNettyProperty(nettyProperty);
-
+        config.setMessageHandleManager(new MessageHandleManagerImpl());
         RPCClient rpcClient = new RPCClient();
         rpcClient.setNettyConfig(config);
         rpcClient.start();

@@ -37,9 +37,9 @@ public class GracefulShutdown implements TomcatConnectorCustomizer, ApplicationL
     }
 
     /**
-     * Handle an application event.
+     * Handle an application exception.
      *
-     * @param event the event to respond to
+     * @param event the exception to respond to
      */
     @Override
     public void onApplicationEvent(ContextClosedEvent event) {

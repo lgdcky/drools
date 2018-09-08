@@ -3,7 +3,7 @@ package com.server.db;
 import com.server.command.RuleCommand;
 import com.server.dao.*;
 import com.server.model.*;
-import com.server.ruleManager.RuleLoadManager;
+import com.server.manager.rule.RuleLoadManager;
 import com.server.utility.TestNgBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;

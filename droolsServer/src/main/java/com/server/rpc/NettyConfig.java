@@ -1,6 +1,8 @@
 package com.server.rpc;
 
 
+import com.server.manager.handle.MessageHandleManager;
+import com.server.rpc.heartbeat.Heartbeat;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.Channels;
@@ -8,10 +10,9 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.LengthFieldBasedFrameDecoder;
 import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
-import org.jboss.netty.handler.timeout.ReadTimeoutHandler;
-import org.jboss.netty.handler.timeout.WriteTimeoutHandler;
 import org.jboss.netty.util.HashedWheelTimer;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,6 +34,9 @@ public class NettyConfig {
     @Autowired
     private RPCServerConfig rpcServerConfig;
 
+    @Autowired
+    private MessageHandleManager messageHandleManager;
+
     @Bean(name = "serverBootstrap")
     public ServerBootstrap bootstrap() throws InterruptedException {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
@@ -44,13 +48,12 @@ public class NettyConfig {
             channelPipeline.addLast("hearbeat", new Heartbeat());
             channelPipeline.addLast("decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, rpcBufferConfig.getLengthFieldOffset(), rpcBufferConfig.getLengthFieldLength(), rpcBufferConfig.getLengthAdjustment(), rpcBufferConfig.getInitialBytesToStrip()));
             channelPipeline.addLast("encoder", new LengthFieldPrepender(4, false));
-            channelPipeline.addLast("rpcServerHandler", new RPCServerHandler());
+            channelPipeline.addLast("rpcServerHandler", new RPCServerHandler(messageHandleManager));
             return channelPipeline;
         });
 
-        serverBootstrap.setOption("child.keepAlive", false);
+        serverBootstrap.setOption("child.keepAlive", true);
         serverBootstrap.setOption("child.tcpNoDelay", true);
-
         return serverBootstrap;
     }
 

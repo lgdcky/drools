@@ -1,4 +1,4 @@
-package com.server.queryManager;
+package com.server.manager.query;
 
 import org.kie.internal.executor.api.Command;
 

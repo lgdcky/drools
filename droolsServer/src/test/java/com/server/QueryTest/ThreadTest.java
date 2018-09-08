@@ -1,7 +1,7 @@
 package com.server.QueryTest;
 
 import com.server.command.OdoCommand;
-import com.server.queryManager.QueryManager;
+import com.server.manager.query.QueryManager;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ public class ThreadTest implements Runnable {
 
     /**
      * When an object implementing interface <code>Runnable</code> is used
-     * to create a thread, starting the thread causes the object's
+     * to create a heartbeat, starting the heartbeat causes the object's
      * <code>run</code> method to be called in that separately executing
-     * thread.
+     * heartbeat.
      * <p>
      * The general contract of the method <code>run</code> is that it may
      * take any action whatsoever.

@@ -1,4 +1,4 @@
-package com.server.ruleManager;
+package com.server.manager.rule;
 
 import com.server.command.RuleCommand;
 import com.server.model.RuleGroup;

@@ -6,8 +6,8 @@ import com.server.command.RuleCommand;
 import com.server.command.WhOdoLineCommand;
 import com.server.knowledgebasemanager.KnowLedgeBaseManger;
 import com.server.model.*;
-import com.server.queryManager.QueryManager;
-import com.server.ruleManager.RuleLoadManager;
+import com.server.manager.query.QueryManager;
+import com.server.manager.rule.RuleLoadManager;
 import com.server.tools.FactLoader;
 import com.server.utility.TestNgBase;
 import com.server.utility.template.*;
@@ -41,7 +41,7 @@ public class ProcessTest extends TestNgBase {
     @Autowired
     private QueryManager queryManager;
 
-    public static final String PACKAGENAME = "com.server.command";
+    public static final String PACKAGENAME = "com.server.project.wms4";
 
     public List<FactClassDescriptionInfo> loadTestFact() {
         factLoader.setClassPath("/command/*.class");
@@ -264,7 +264,7 @@ public class ProcessTest extends TestNgBase {
 
 
         System.out.println("======================================================");
-        List<OdoCommand> odoCommands = new ArrayList<>();
+        List<Object> odoCommands = new ArrayList<>();
         for (int i = 0; i < 50000; i++) {
             odoCommands.add(dataBuilder(i));
         }

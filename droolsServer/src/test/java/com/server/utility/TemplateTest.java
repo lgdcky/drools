@@ -3,7 +3,7 @@ package com.server.utility;
 import com.server.command.OdoCommand;
 import com.server.command.WhOdoLineCommand;
 import com.server.knowledgebasemanager.KnowLedgeBaseManger;
-import com.server.queryManager.QueryManager;
+import com.server.manager.query.QueryManager;
 import com.server.tools.FactLoader;
 import com.server.utility.template.HanderTemplate;
 import com.server.utility.template.SimpleRuleTemplate;

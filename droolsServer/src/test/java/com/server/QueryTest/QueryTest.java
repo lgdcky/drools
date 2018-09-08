@@ -3,7 +3,7 @@ package com.server.QueryTest;
 import com.server.knowledgebasemanager.KnowLedgeBaseManger;
 import com.server.command.OdoCommand;
 import com.server.command.WhOdoLineCommand;
-import com.server.queryManager.QueryManager;
+import com.server.manager.query.QueryManager;
 import com.server.utility.TestNgBase;
 import org.drools.compiler.lang.DrlDumper;
 import org.drools.compiler.lang.api.DescrFactory;
@@ -11,7 +11,6 @@ import org.drools.compiler.lang.api.PackageDescrBuilder;
 import org.drools.core.io.impl.BaseResource;
 import org.drools.core.io.impl.ByteArrayResource;
 import org.junit.Test;
-import org.kie.api.runtime.ExecutionResults;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;

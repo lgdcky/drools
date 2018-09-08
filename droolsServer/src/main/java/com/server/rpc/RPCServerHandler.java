@@ -1,27 +1,19 @@
 package com.server.rpc;
 
 
-import com.alibaba.fastjson.JSON;
-import com.server.rpc.event.ExceptionHandler;
-import com.server.tools.CompressTool;
-import org.jboss.netty.buffer.BigEndianHeapChannelBuffer;
-import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
+import com.server.manager.handle.MessageHandleManager;
+import com.server.rpc.exception.ExceptionHandler;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.DynamicChannelBuffer;
 import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.timeout.IdleState;
-import org.jboss.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import static com.server.tools.CompressTool.compresss;
+import static com.server.rpc.heartbeat.Heartbeat.HEARTBEATEND;
+import static com.server.rpc.heartbeat.Heartbeat.HEARTBEATSTART;
+import static com.server.tools.NettyMessageTool.convertStringAndSend;
+import static com.server.tools.NettyMessageTool.convertToString;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,9 +26,11 @@ public class RPCServerHandler extends SimpleChannelHandler {
 
     private static Logger logger = LoggerFactory.getLogger(RPCServerHandler.class);
 
-    private Integer bufferSize = 0;
+    private MessageHandleManager messageHandleManager;
 
-    private List<Integer> list = new ArrayList<>();
+    RPCServerHandler(MessageHandleManager messageHandleManager){
+        this.messageHandleManager = messageHandleManager;
+    }
 
     /**
      * Invoked when a message object (e.g: {@link ChannelBuffer}) was received
@@ -47,21 +41,21 @@ public class RPCServerHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        Channel channel = ctx.getChannel();
-        ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
-        if (buffer.array().length <= 0) {
+        String message = convertToString(ctx, e);
+        if (HEARTBEATSTART.equals(message)) {
+            convertStringAndSend(ctx, e, HEARTBEATEND);
+            System.out.println("ping");
+        }else if (HEARTBEATEND.equals(message)) {
             return;
+        } else if (null != message) {
+            System.out.println(Instant.now());
+            messageHandleManager.messageHandle(message);
         }
-        System.out.println(buffer.array().length);
-        String JsonString = new String(CompressTool.uncompresss(buffer.array()));
-        ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(JsonString.getBytes())));
-        channel.write(buffer);
-        System.out.println(channel.getId()+"    id");
-        buffer.clear();
     }
 
+
     /**
-     * Invoked when an exception was raised by an I/O thread or a
+     * Invoked when an exception was raised by an I/O heartbeat or a
      * {@link ChannelHandler}.
      *
      * @param ctx
@@ -112,31 +106,4 @@ public class RPCServerHandler extends SimpleChannelHandler {
         super.channelClosed(ctx, e);
     }
 
-    /**
-     * {@inheritDoc}  Down-casts the received upstream event into more
-     * meaningful sub-type event and calls an appropriate handler method with
-     * the down-casted event.
-     *
-     * @param ctx
-     * @param e
-     */
-    @Override
-    public void handleUpstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
-        if (e instanceof IdleStateEvent) {
-            if (((IdleStateEvent) e).getState() == IdleState.ALL_IDLE) {
-                logger.warn("Time out,connection will close");
-                ctx.getChannel().close();
-            }
-            if (((IdleStateEvent) e).getState() == IdleState.READER_IDLE) {
-                logger.warn("Reader Time out,connection will close");
-                ctx.getChannel().close();
-            }
-            if (((IdleStateEvent) e).getState() == IdleState.WRITER_IDLE) {
-                logger.warn("Writer Time out,connection will close");
-                ctx.getChannel().close();
-            }
-        } else {
-            super.handleUpstream(ctx, e);
-        }
-    }
 }

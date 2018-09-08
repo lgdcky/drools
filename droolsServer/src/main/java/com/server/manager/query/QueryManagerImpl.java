@@ -1,4 +1,4 @@
-package com.server.queryManager;
+package com.server.manager.query;
 
 import com.server.utility.KnowledgeBaseLib;
 import org.drools.core.impl.InternalKnowledgeBase;
@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 /**
  * Created with IntelliJ IDEA.

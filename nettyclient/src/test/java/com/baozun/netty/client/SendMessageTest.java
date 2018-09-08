@@ -25,14 +25,14 @@ public class SendMessageTest{
         RPCClient rpcClient = initClient();
 
         List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 50000; i++) {
             odoCommands.add(dataBuilder(i));
         }
 
         RuleCommand<OdoCommand> ruleCommand = new RuleCommand<OdoCommand>();
         ruleCommand.setFactList(odoCommands);
-        ruleCommand.setGroup("test");
-        ruleCommand.setType("odoCommand");
+        ruleCommand.setGroup("测试一组");
+        ruleCommand.setType("odoCommandFact");
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setRpcClient(rpcClient);
@@ -40,11 +40,11 @@ public class SendMessageTest{
         System.out.println(formatter.format(new Date()) + "   start");
         System.out.println(sendMessage.sendMessage(ruleCommand));
 
-        SendMessage sendMessage1 = new SendMessage();
-        sendMessage1.setRpcClient(rpcClient);
-        formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
         System.out.println(formatter.format(new Date()) + "   start");
-        System.out.println(sendMessage1.sendMessage(ruleCommand));
+        System.out.println(sendMessage.sendMessage(ruleCommand));
+
     }
+
+
 
 }

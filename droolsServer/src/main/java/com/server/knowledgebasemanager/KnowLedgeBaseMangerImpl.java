@@ -3,15 +3,13 @@ package com.server.knowledgebasemanager;
 import com.server.MessageCommand.KnowledgeMessage;
 import com.server.exception.KnowLedgeBuilderException;
 import com.server.factory.DroolsServicesBuilderFactory;
-import com.server.ruleManager.RuleLoadManager;
+import com.server.manager.rule.RuleLoadManager;
 import com.server.utility.KnowledgeBaseLib;
 import org.drools.core.impl.InternalKnowledgeBase;
 import org.drools.core.io.impl.BaseResource;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.builder.KnowledgeBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

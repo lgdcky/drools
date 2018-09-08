@@ -1,17 +1,16 @@
 package com.baozun.netty.client;
 
-import com.baozun.netty.client.tools.CompressTool;
-import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
+import com.baozun.netty.client.exception.ExceptionHandler;
+import com.baozun.netty.client.manager.MessageHandleManager;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.timeout.IdleState;
-import org.jboss.netty.handler.timeout.IdleStateEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import static com.baozun.netty.client.Heartbeat.HEARTBEATEND;
+import static com.baozun.netty.client.Heartbeat.HEARTBEATSTART;
+import static com.baozun.netty.client.tools.NettyMessageTool.convertStringAndSend;
+import static com.baozun.netty.client.tools.NettyMessageTool.convertToString;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +22,12 @@ public class RPCClientHandler extends SimpleChannelHandler {
 
     private static Logger logger = LoggerFactory.getLogger(RPCClientHandler.class);
 
+    private MessageHandleManager messageHandleManager;
+
+    RPCClientHandler(MessageHandleManager messageHandleManager) {
+        this.messageHandleManager = messageHandleManager;
+    }
+
     /**
      * Invoked when a message object (e.g: {@link ChannelBuffer}) was received
      * from a remote peer.
@@ -32,14 +37,14 @@ public class RPCClientHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
-        if (buffer.array().length <= 0) {
+        String message = convertToString(ctx, e);
+        if (HEARTBEATSTART.equals(message)) {
+            convertStringAndSend(ctx, e, HEARTBEATEND);
+        } else if (HEARTBEATEND.equals(message)) {
             return;
+        } else if (null != message) {
+            messageHandleManager.messageConvert(message);
         }
-        System.out.println(buffer.array().length);
-        String JsonString = new String(CompressTool.uncompresss(buffer.array()));
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
-        System.out.println(formatter.format(new Date()) + "   end");
     }
 
     /**
@@ -53,6 +58,7 @@ public class RPCClientHandler extends SimpleChannelHandler {
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         logger.error(e.toString());
         super.exceptionCaught(ctx, e);
+        ExceptionHandler.exceptionHandle(ctx, e);
     }
 
     /**
