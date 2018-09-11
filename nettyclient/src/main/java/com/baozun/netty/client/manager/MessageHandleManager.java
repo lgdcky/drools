@@ -1,5 +1,9 @@
 package com.baozun.netty.client.manager;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
@@ -9,5 +13,7 @@ package com.baozun.netty.client.manager;
 public interface MessageHandleManager {
 
     public void messageConvert(String message);
+
+    public void messageHandle(Object message) throws IOException;
 
 }

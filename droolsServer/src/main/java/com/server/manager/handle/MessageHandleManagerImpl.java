@@ -3,15 +3,20 @@ package com.server.manager.handle;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.server.manager.query.QueryManager;
-import com.server.project.tools.JsonToProjectFact;
+import com.server.tools.TypeConvertTools;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.server.tools.CompressTool.compresss;
 
 /**
  * Created with IntelliJ IDEA.
@@ -23,6 +28,8 @@ import java.util.Map;
 @Component
 public class MessageHandleManagerImpl implements MessageHandleManager {
 
+    private static Logger logger = LoggerFactory.getLogger(MessageHandleManagerImpl.class);
+
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -30,9 +37,8 @@ public class MessageHandleManagerImpl implements MessageHandleManager {
     private QueryManager queryManager;
 
     @Override
-    public Object[] messageHandle(String message) {
+    public byte[] messageHandle(String message) throws IOException {
         Map<String, Object[]> map = convertJsonStrToMap(message);
-
         Object[] param = map.get("param");
 
         String group = param[0].toString();
@@ -40,11 +46,27 @@ public class MessageHandleManagerImpl implements MessageHandleManager {
 
         Object[] data = map.get("data");
 
-        JsonToProjectFact jsonToProjectFact = (JsonToProjectFact) applicationContext.getBean(type);
+        byte[] bytes = doFilter(data,type,group,queryManager);
+        return bytes;
+    }
 
-        queryManager.queryCommandWithStatelessKieSessionAsList(group, jsonToProjectFact.convertJsonToObj(data));
+    @Override
+    public byte[] messageHandle(Map message) throws IOException {
+        long star = 0l;
+        Object[] param = (Object[]) message.get("param");
+        Object[] data = (Object[]) message.get("data");
+        String group = param[0].toString();
+        String type = param[1].toString();
+        byte[] bytes = doFilter(data,type,group,queryManager);
+        return bytes;
+    }
 
-        return null;
+    public static byte[] doFilter(Object[] data,String type,String group,QueryManager queryManager) throws IOException {
+        List<Object> dataList = Stream.of(data).collect(Collectors.toList());
+        queryManager.queryCommandWithStatelessKieSessionAsList(group, dataList);
+        byte[] bytes = TypeConvertTools.objToBytesByStream(dataList);
+        byte[] bytes_c = compresss(bytes);
+        return bytes_c;
     }
 
 

@@ -1,13 +1,9 @@
 package com.server.project.tools;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.server.project.wms4.OdoCommand;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,9 +15,8 @@ import java.util.stream.Stream;
 public class ConvertToOdoCommandFact implements JsonToProjectFact<OdoCommand> {
 
     @Override
-    public List<OdoCommand> convertJsonToObj(Object[] projectCommand) {
-        //List list = Stream.of(projectCommand).parallel().forEach(p -> JSONObject.parseObject(p.toString(), OdoCommand.class)).collect(Collectors.toList());
-        //List<OdoCommand> data = (List<OdoCommand>) list;
+    public List<OdoCommand> convertJsonToObj(Object projectCommand) {
+        Object[] datas = (Object[]) projectCommand;
         return null;
     }
 

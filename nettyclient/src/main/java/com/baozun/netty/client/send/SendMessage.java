@@ -1,20 +1,14 @@
 package com.baozun.netty.client.send;
 
-import com.alibaba.fastjson.JSONObject;
 import com.baozun.netty.client.RPCClient;
 import com.baozun.netty.client.command.RuleCommand;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.baozun.netty.client.tools.TypeConvertTools;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +28,7 @@ public class SendMessage<T> {
 
     private static final String QUERYFAILED = "FAILED";
 
-    private static final JSONObject jsonObject = new JSONObject();
+    private static final Integer BUFFERSIZE = 3 * 1024 * 1024;
 
     private RPCClient rpcClient;
 
@@ -49,6 +43,7 @@ public class SendMessage<T> {
     public String sendMessage(RuleCommand<T> message) throws Exception {
         List<Map<String, Object[]>> dataList = message.getRuleCommandList();
         Channel channel = this.rpcClient.getChannel();
+
 
         if (!channel.isConnected())
             throw new Exception("connection failed");
@@ -76,16 +71,9 @@ public class SendMessage<T> {
     }
 
     private static final ChannelFuture processMessage(Map<String, Object[]> map, Channel channel) throws IOException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
-        String json = jsonObject.toJSONString(map);
-        System.out.println(formatter.format(new Date()) + "   to string");
-        String json1 = jsonObject.toJSONString(map);
-        System.out.println(formatter.format(new Date()) + "   to string");
-        byte[] bytes = json.getBytes("UTF-8");
-        System.out.println(formatter.format(new Date()) + "   to bytes");
-        ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer();
+        byte[] bytes = compresss(TypeConvertTools.objToBytesByStream(map));
+        ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer(BUFFERSIZE);
         dynamicDuffer.writeBytes(bytes);
-        System.out.println(formatter.format(new Date()) + "   ready");
         ChannelFuture channelFuture = channel.write(dynamicDuffer);
         dynamicDuffer.clear();
         return channelFuture;

@@ -1,5 +1,6 @@
 package com.baozun.netty.client;
 
+import com.baozun.netty.client.tools.TypeConvertTools;
 import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.*;
@@ -41,7 +42,7 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
         if (e.getState() == IdleState.ALL_IDLE)
             count++;
         if (count == 3) {
-            e.getChannel().close();
+            //e.getChannel().close();
             logger.info("连接断开!");
         }
     }
@@ -69,7 +70,7 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
         if (e instanceof IdleStateEvent) {
             if (((IdleStateEvent) e).getState() == IdleState.ALL_IDLE) {
                 logger.warn("will check server state!");
-                ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(HEARTBEATSTART.getBytes())));
+                ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(TypeConvertTools.objToBytesByStream(HEARTBEATSTART))));
                 ctx.getChannel().write(bufferByte);
                 bufferByte.clear();
             }

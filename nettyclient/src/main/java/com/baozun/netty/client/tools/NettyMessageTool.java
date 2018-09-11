@@ -32,9 +32,20 @@ public class NettyMessageTool {
     }
 
     public static final ChannelFuture convertStringAndSend(ChannelHandlerContext ctx, MessageEvent e, String info) throws IOException {
-        ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(info.getBytes())));
+        ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(TypeConvertTools.objToBytesByStream(info))));
         ChannelFuture channelFuture =  ctx.getChannel().write(bufferByte);
         bufferByte.clear();
         return channelFuture;
+    }
+
+    public static final Object convertBytes(ChannelHandlerContext ctx, MessageEvent e) throws IOException, ClassNotFoundException {
+        Object object = null;
+        Channel channel = ctx.getChannel();
+        ChannelBuffer buffer = (ChannelBuffer) e.getMessage();
+        if (buffer.array().length <= 0) {
+            return null;
+        }
+        object = TypeConvertTools.bytesToObjectByStream(uncompresss(buffer.array()));
+        return object;
     }
 }

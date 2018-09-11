@@ -1,5 +1,6 @@
 package com.server.manager.query;
 
+import com.server.project.wms4.OdoCommand;
 import com.server.utility.KnowledgeBaseLib;
 import org.drools.core.impl.InternalKnowledgeBase;
 import org.kie.api.command.Command;
@@ -66,14 +67,12 @@ public class QueryManagerImpl<T, V> implements QueryManager<T, V> {
         Function<String, InternalKnowledgeBase> internalKnowledgeBaseFunction = knowledgeBaseLib::getInternalKnowledgeBase;
         Supplier<StatelessKieSession> statelessKieSessionSupplier = internalKnowledgeBaseFunction.apply(knowLedgeBaseName)::newStatelessKieSession;
         StatelessKieSession statelessKieSession = statelessKieSessionSupplier.get();
-        List resultList = new ArrayList();
         if (null != data && data instanceof List) {
-            statelessKieSession.setGlobal("list", resultList);
             ((List) data).parallelStream().forEach(datainfo->{
                 statelessKieSession.execute(datainfo);
             });
         }
-        return (T) resultList;
+        return (T) data;
     }
 
     /**

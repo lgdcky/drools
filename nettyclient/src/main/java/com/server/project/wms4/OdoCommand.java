@@ -1,4 +1,6 @@
-package com.baozun.netty.client.command;
+package com.server.project.wms4;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -13,66 +15,179 @@ import java.util.List;
 
 public class OdoCommand implements Serializable {
     private static final long serialVersionUID = 5523630809017120661L;
+
+    @JSONField
     private String odoCode;
+
+    @JSONField
     private String extCode;
+
+    @JSONField
     private String ecOrderCode;
+
+    @JSONField
     private Long customerId;
+
+    @JSONField
     private Long storeId;
+
+    @JSONField
     private String odoType;
+
+    @JSONField
     private String originalOdoCode;
+
+    @JSONField
     private Integer priorityLevel;
+
+    @JSONField
     private Boolean isWholeOrderOutbound;
+
+    @JSONField
     private String crossDockingSymbol;
+
+    @JSONField
     private String orderType;
+
+    @JSONField
     private Date orderTime;
+
+    @JSONField
     private String odoStatus;
+
+    @JSONField
     private Double qty;
+
+    @JSONField
     private Double currentQty;
+
+    @JSONField
     private Double actualQty;
+
+    @JSONField
     private Double cancelQty;
+
+    @JSONField
     private Integer skuNumberOfPackages;
+
+    @JSONField
     private Double amt;
+
+    @JSONField
     private String distributeMode;
+
+    @JSONField
     private String epistaticSystemsOrderType;
+
+    @JSONField
     private Long outboundCartonType;
+
+    @JSONField
     private Boolean includeHazardousCargo;
+
+    @JSONField
     private Boolean includeFragileCargo;
+
+    @JSONField
     private Boolean isLocked;
+
+    @JSONField
     private Long ouId;
+
+    @JSONField
     private Date createTime;
+
+    @JSONField
     private Long createdId;
+
+    @JSONField
     private Date lastModifyTime;
+
+    @JSONField
     private Long modifiedId;
+
+    @JSONField
     private String groupOdoCode;
+
+    @JSONField
     private Boolean isAssignSuccess;
+
+    @JSONField
     private String assignFailReason;
+
+    @JSONField
     private Boolean isAllowMerge;
+
+    @JSONField
     private String waveCode;
+
+    @JSONField
     private String counterCode;
+
+    @JSONField
     private String distributionCode;
+
+    @JSONField
     private String dataSource;
+
+    @JSONField
     private Boolean isFreightInvoiceSunder;
+
+    @JSONField
     private String lagOdoStatus;
+
+    @JSONField
     private Boolean isPermitOutBound = true;
+
+    @JSONField
     private String odoIndex;
+
+    @JSONField
     private String sysDate;
+
+    @JSONField
     private Date archivTime;
+
+    @JSONField
     private String extOdoType;
+
+    @JSONField
     private Boolean isCancel;
+
+    @JSONField
     private Date pickTime;
+
+    @JSONField
     private Date outboundTime;
+
+    @JSONField
     private Boolean isWhVasOrder;
+
+    @JSONField
     private String extProps;
+
+    @JSONField
     private Double currentActualQty;
+
+    @JSONField
     private String partOutboundStrategy;
+
+    @JSONField
     private Integer cartonQty;
+
+    @JSONField
     private String invChangeNotifyIm;
+
+    @JSONField
     private String waveBatch;
+
+    @JSONField
     private String createWaveFlag;
 
+    @JSONField
     private String message;
 
-
+    @JSONField
     private List<WhOdoLineCommand> whOdoLineCommands;
 
 

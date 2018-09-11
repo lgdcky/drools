@@ -10,6 +10,6 @@ import java.util.List;
  */
 public interface JsonToProjectFact<T> {
 
-    public List<T> convertJsonToObj(Object[] projectCommand);
+    public List<T> convertJsonToObj(Object projectCommand);
 
 }

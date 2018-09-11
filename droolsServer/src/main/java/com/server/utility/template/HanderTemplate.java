@@ -39,7 +39,8 @@ public class HanderTemplate {
      * @return
      */
     public RuleDescrBuilder addRuleInfo(String packageName, String ruleName, String group, String orderNo) {
-        return packageDescrBuilder.name(packageName).newRule().name(ruleName).attribute("agenda-group", "\"" + group + "\"").attribute("salience", orderNo).attribute("dialect", "java").attribute("no-loop", "true");
+        return packageDescrBuilder.name(packageName).newRule().name(ruleName);
+        /*return packageDescrBuilder.name(packageName).newRule().name(ruleName).attribute("agenda-group", "\"" + group + "\"").attribute("salience", orderNo).attribute("dialect", "java").attribute("no-loop", "true");*/
     }
 
 

@@ -1,5 +1,6 @@
 package com.server.rpc.heartbeat;
 
+import com.server.tools.TypeConvertTools;
 import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.*;
@@ -37,13 +38,13 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
      */
     @Override
     public void channelIdle(ChannelHandlerContext ctx, IdleStateEvent e) throws Exception {
-        super.channelIdle(ctx, e);
         if (e.getState() == IdleState.ALL_IDLE)
             count++;
         if (count == 3) {
             e.getChannel().close();
-            logger.info("连接断开!");
+            logger.info("connection Broken!");
         }
+        super.channelIdle(ctx, e);
     }
 
     /**
@@ -69,7 +70,7 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
         if (e instanceof IdleStateEvent) {
             if (((IdleStateEvent) e).getState() == IdleState.ALL_IDLE) {
                 logger.warn("will check client state!");
-                ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(HEARTBEATSTART.getBytes())));
+                ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(TypeConvertTools.objToBytesByStream(HEARTBEATSTART))));
                 ctx.getChannel().write(bufferByte);
                 bufferByte.clear();
             }
@@ -79,9 +80,8 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
             if (((IdleStateEvent) e).getState() == IdleState.WRITER_IDLE) {
                 logger.warn("Writer Time out,load data failed!");
             }
-        } else {
-            super.handleUpstream(ctx, e);
         }
+        super.handleUpstream(ctx, e);
     }
 
 }

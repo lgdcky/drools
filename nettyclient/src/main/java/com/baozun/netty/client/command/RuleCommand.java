@@ -1,17 +1,11 @@
 package com.baozun.netty.client.command;
 
-import com.alibaba.fastjson.JSON;
-import com.baozun.netty.client.tools.CompressTool;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.baozun.netty.client.tools.TypeConvertTools;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
+import static com.baozun.netty.client.tools.CompressTool.compresss;
 
 /**
  * Created with IntelliJ IDEA.
@@ -150,8 +144,7 @@ public class RuleCommand<T> {
 
     //获取压缩后体积
     private final byte[] convertToBytes(Object factList) throws IOException {
-        String fJson = JSON.toJSONString(factList);
-        return CompressTool.compresss(fJson.getBytes());
+        return compresss(TypeConvertTools.objToBytesByStream(factList));
     }
 
 }

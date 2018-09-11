@@ -43,7 +43,7 @@ public interface KnowLedgeBaseManger {
 
     /**
      * 测试规则
-     * @param BaseResource
+     * @param resources
      */
     public KnowledgeMessage testRule(List<BaseResource> resources);
 

@@ -13,8 +13,10 @@ import java.io.IOException;
 public class CompressTool {
 
     public static byte[] compresss(byte srcBytes[]) throws IOException {
-        return  Snappy.compress(srcBytes);
+        byte[] bytes = Snappy.compress(srcBytes);
+        return bytes;
     }
+
     public static byte[] uncompresss(byte[] bytes) throws IOException {
         return Snappy.uncompress(bytes);
     }

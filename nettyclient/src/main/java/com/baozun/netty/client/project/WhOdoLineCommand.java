@@ -1,4 +1,6 @@
-package com.baozun.netty.client.command;
+package com.baozun.netty.client.project;
+
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,58 +13,164 @@ import java.util.Date;
  */
 public class WhOdoLineCommand implements Serializable {
     private static final long serialVersionUID = -2071411398425434080L;
+
+    @JSONField
     private Long odoId;
+
+    @JSONField
     private Integer linenum;
+
+    @JSONField
     private Integer originalLinenum;
+
+    @JSONField
     private Long storeId;
+
+    @JSONField
     private Integer extLinenum;
+
+    @JSONField
     private Long skuId;
+
+    @JSONField
     private String skuBarCode;
+
+    @JSONField
     private String skuName;
+
+    @JSONField
     private String extSkuName;
+
+    @JSONField
     private Double qty;
+
+    @JSONField
     private Double planQty;
+
+    @JSONField
     private Double currentQty;
+
+    @JSONField
     private Double actualQty;
+
+    @JSONField
     private Double cancelQty;
+
+    @JSONField
     private Double assignQty;
+
+    @JSONField
     private Double diekingQty;
+
+    @JSONField
     private Double linePrice;
+
+    @JSONField
     private Double lineTagPrice;
+
+    @JSONField
     private Double lineAmt;
+
+    @JSONField
     private String odoLineStatus;
+
+    @JSONField
     private Boolean isCheck;
+
+    @JSONField
     private Boolean fullLineOutbound;
+
+    @JSONField
     private String partOutboundStrategy;
+
+    @JSONField
     private Date mfgDate;
+
+    @JSONField
     private Date expDate;
+
+    @JSONField
     private Date minExpDate;
+
+    @JSONField
     private Date maxExpDate;
+
+    @JSONField
     private String batchNumber;
+
+    @JSONField
     private String countryOfOrigin;
+
+    @JSONField
     private Long invStatus;
+
+    @JSONField
     private String invType;
+
+    @JSONField
     private String invAttr1;
+
+    @JSONField
     private String invAttr2;
+
+    @JSONField
     private String invAttr3;
+
+    @JSONField
     private String invAttr4;
+
+    @JSONField
     private String invAttr5;
+
+    @JSONField
     private Long outboundCartonType;
+
+    @JSONField
     private String color;
+
+    @JSONField
     private String style;
+
+    @JSONField
     private String size;
+
+    @JSONField
     private String mixingAttr;
+
+    @JSONField
     private String originalOdoCode;
+
+    @JSONField
     private String assignFailReason;
+
+    @JSONField
     private Boolean isAssignSuccess;
+
+    @JSONField
     private Long ouId;
+
+    @JSONField
     private Date createTime;
+
+    @JSONField
     private Long createdId;
+
+    @JSONField
     private Date lastModifyTime;
+
+    @JSONField
     private Long modifiedId;
+
+    @JSONField
     private String waveCode;
+
+    @JSONField
     private Boolean isWhVas;
+
+    @JSONField
     private String sysDate;
+
+    @JSONField
     private String extProps;
 
     public WhOdoLineCommand() {

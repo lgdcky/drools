@@ -4,16 +4,18 @@ package com.server.rpc;
 import com.server.manager.handle.MessageHandleManager;
 import com.server.rpc.exception.ExceptionHandler;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.Map;
 
 import static com.server.rpc.heartbeat.Heartbeat.HEARTBEATEND;
 import static com.server.rpc.heartbeat.Heartbeat.HEARTBEATSTART;
+import static com.server.tools.NettyMessageTool.convertBytes;
 import static com.server.tools.NettyMessageTool.convertStringAndSend;
-import static com.server.tools.NettyMessageTool.convertToString;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +30,9 @@ public class RPCServerHandler extends SimpleChannelHandler {
 
     private MessageHandleManager messageHandleManager;
 
-    RPCServerHandler(MessageHandleManager messageHandleManager){
+    private static final Integer BUFFERSIZE = 3 * 1024 * 1024;
+
+    RPCServerHandler(MessageHandleManager messageHandleManager) {
         this.messageHandleManager = messageHandleManager;
     }
 
@@ -41,15 +45,24 @@ public class RPCServerHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        String message = convertToString(ctx, e);
-        if (HEARTBEATSTART.equals(message)) {
-            convertStringAndSend(ctx, e, HEARTBEATEND);
-            System.out.println("ping");
-        }else if (HEARTBEATEND.equals(message)) {
-            return;
-        } else if (null != message) {
-            System.out.println(Instant.now());
-            messageHandleManager.messageHandle(message);
+        System.out.println(Instant.now()+"   received");
+        Object message = convertBytes(ctx, e);
+        if (message instanceof String) {
+            if (HEARTBEATSTART.equals(message)) {
+                convertStringAndSend(ctx, e, HEARTBEATEND);
+            } else {
+                return;
+            }
+        } else {
+            long star = System.currentTimeMillis();
+            byte[] bytes = messageHandleManager.messageHandle((Map) message);
+            System.out.println(System.currentTimeMillis()-star+"    do filter");
+            star = System.currentTimeMillis();
+            ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer(BUFFERSIZE);
+            dynamicDuffer.writeBytes(bytes);
+            ctx.getChannel().write(dynamicDuffer);
+            System.out.println(System.currentTimeMillis()-star+"    do writer");
+            dynamicDuffer.clear();
         }
     }
 
@@ -64,8 +77,8 @@ public class RPCServerHandler extends SimpleChannelHandler {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         logger.error(e.toString());
-        super.exceptionCaught(ctx, e);
         ExceptionHandler.exceptionHandle(ctx, e);
+        super.exceptionCaught(ctx, e);
     }
 
     /**

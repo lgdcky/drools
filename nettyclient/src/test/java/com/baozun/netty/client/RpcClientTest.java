@@ -2,11 +2,14 @@ package com.baozun.netty.client;
 /*
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;*/
-import com.baozun.netty.client.command.OdoCommand;
-import com.baozun.netty.client.command.WhOdoLineCommand;
+
+import com.baozun.netty.client.command.RuleCommand;
 import com.baozun.netty.client.manager.MessageHandleManagerImpl;
 import com.baozun.netty.client.property.NettyProperty;
+import com.baozun.netty.client.send.SendMessage;
 import com.baozun.netty.client.tools.CompressTool;
+import com.server.project.wms4.OdoCommand;
+import com.server.project.wms4.WhOdoLineCommand;
 import org.jboss.netty.buffer.*;
 import org.jboss.netty.channel.ChannelFuture;
 import org.testng.annotations.Test;
@@ -14,6 +17,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -89,7 +93,7 @@ public class RpcClientTest {
     public static RPCClient initClient() {
         NettyProperty nettyProperty = new NettyProperty();
         nettyProperty.setIdleReadTime(20);
-        nettyProperty.setIdleTime(10);
+        nettyProperty.setIdleTime(20);
         nettyProperty.setIdleWriteTime(20);
         nettyProperty.setInitialBytesToStrip(4);
         nettyProperty.setLengthAdjustment(0);
@@ -148,6 +152,29 @@ public class RpcClientTest {
 
         odoCommand.setWhOdoLineCommands(whOdoLineCommands);
         return odoCommand;
+    }
+
+
+    @Test(threadPoolSize = 2, invocationCount = 5, timeOut = 10000)
+    public void send() throws Exception {
+        RPCClient rpcClient = initClient();
+
+        List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
+        for (int i = 0; i < 10000; i++) {
+            odoCommands.add(dataBuilder(i));
+        }
+
+        RuleCommand<OdoCommand> ruleCommand = new RuleCommand<OdoCommand>();
+        ruleCommand.setFactList(odoCommands);
+        ruleCommand.setGroup("测试一组");
+        ruleCommand.setType("odoCommandFact");
+
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setRpcClient(rpcClient);
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
+        System.out.println(formatter.format(new Date()) + "   start");
+        System.out.println(sendMessage.sendMessage(ruleCommand));
+
     }
 
 }

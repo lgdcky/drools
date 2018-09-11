@@ -28,22 +28,24 @@ mybatis:
 
 logging:
   level:
-    org.springframework: ERROR
+    org.springframework: DEBUG
     com.server: DEBUG
     org.jboss.netty: DEBUG
+    org.kie: DEBUG
+    org.apache: DEBUG
 
 netty:
   server:
     name: droolsServerSocket
     port: 8092
-    readTime: 15
-    writeTime: 15
-    idleTime: 15
-    idleReadTime: 10
-    idleWriteTime: 10
+    readTime: 20
+    writeTime: 20
+    idleTime: 25
+    idleReadTime: 20
+    idleWriteTime: 20
     timeout: 10000
   bueffer:
-    maxFrameLength: 20971520 #一次性最大传输体积20M
+    maxFrameLength: 2147483647
     lengthFieldOffset: 0
     lengthFieldLength: 4
     lengthAdjustment: 0

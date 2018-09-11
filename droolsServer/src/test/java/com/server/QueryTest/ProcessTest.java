@@ -1,9 +1,9 @@
 package com.server.QueryTest;
 
 import com.server.MessageCommand.KnowledgeMessage;
-import com.server.command.OdoCommand;
+import com.server.project.wms4.OdoCommand;
 import com.server.command.RuleCommand;
-import com.server.command.WhOdoLineCommand;
+import com.server.project.wms4.WhOdoLineCommand;
 import com.server.knowledgebasemanager.KnowLedgeBaseManger;
 import com.server.model.*;
 import com.server.manager.query.QueryManager;
@@ -42,6 +42,8 @@ public class ProcessTest extends TestNgBase {
     private QueryManager queryManager;
 
     public static final String PACKAGENAME = "com.server.project.wms4";
+
+    /*public static final String PACKAGENAME = "com.server.command";*/
 
     public List<FactClassDescriptionInfo> loadTestFact() {
         factLoader.setClassPath("/command/*.class");
@@ -256,6 +258,14 @@ public class ProcessTest extends TestNgBase {
     }
 
     @Test
+    public void testProce(){
+        deleteRule();
+        loadAllRuleForDB();
+        saveRule();
+        loadRuleToKnowLedgeBaseManger();
+    }
+
+    @Test
     public void loadRuleToKnowLedgeBaseManger() {
         Map<String, List<BaseResource>> map = ruleLoadManager.loadAllRules();
         map.forEach((group, resourceList) -> {
@@ -264,9 +274,9 @@ public class ProcessTest extends TestNgBase {
 
 
         System.out.println("======================================================");
-        List<Object> odoCommands = new ArrayList<>();
-        for (int i = 0; i < 50000; i++) {
-            odoCommands.add(dataBuilder(i));
+        List<OdoCommand> odoCommands = new ArrayList<>();
+        for (int i = 0; i < 100000; i++) {
+            odoCommands.add(dataBuilders(i));
         }
 
         System.out.println("======================================================");
@@ -287,8 +297,55 @@ public class ProcessTest extends TestNgBase {
             }
         }
         System.out.println(count);*/
+        int count=0;
+        for (int i = 0; i < odoCommands.size(); i++) {
+            if (null != odoCommands.get(i).getMessage())
+                count++;
+        }
+        System.out.println(count);
+
         System.out.println("======================================================");
 
+    }
+
+    public static OdoCommand dataBuilders(int i) {
+        String t = "" + i;
+        OdoCommand odoCommand = new OdoCommand();
+        odoCommand.setAmt(new Double(1));
+        odoCommand.setOuId(Long.valueOf(t));
+        odoCommand.setOdoType(String.valueOf(new Random().nextInt(5)));
+        odoCommand.setCustomerId(Long.valueOf(new Random().nextInt(2)));
+        odoCommand.setOdoIndex(String.valueOf(new Random().nextInt(2)));
+        odoCommand.setActualQty(Double.parseDouble(String.valueOf(new Random().nextInt(10))));
+        List<WhOdoLineCommand> whOdoLineCommands = new ArrayList<WhOdoLineCommand>();
+        WhOdoLineCommand whOdoLineCommand1 = new WhOdoLineCommand();
+        whOdoLineCommand1.setQty(Double.parseDouble(t));
+        whOdoLineCommand1.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
+        whOdoLineCommand1.setActualQty(new Random(i).nextDouble());
+        whOdoLineCommands.add(whOdoLineCommand1);
+        WhOdoLineCommand whOdoLineCommand2 = new WhOdoLineCommand();
+        whOdoLineCommand2.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
+        whOdoLineCommand2.setQty(Double.parseDouble(t));
+        whOdoLineCommand2.setActualQty(new Random(i).nextDouble());
+        whOdoLineCommands.add(whOdoLineCommand2);
+        WhOdoLineCommand whOdoLineCommand3 = new WhOdoLineCommand();
+        whOdoLineCommand3.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
+        whOdoLineCommand3.setQty(Double.parseDouble(t));
+        whOdoLineCommand3.setActualQty(new Random(i).nextDouble());
+        whOdoLineCommands.add(whOdoLineCommand3);
+        WhOdoLineCommand whOdoLineCommand4 = new WhOdoLineCommand();
+        whOdoLineCommand4.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
+        whOdoLineCommand4.setQty(Double.parseDouble(t));
+        whOdoLineCommand4.setActualQty(new Random(i).nextDouble());
+        whOdoLineCommands.add(whOdoLineCommand4);
+        WhOdoLineCommand whOdoLineCommand5 = new WhOdoLineCommand();
+        whOdoLineCommand5.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
+        whOdoLineCommand5.setQty(Double.parseDouble(t));
+        whOdoLineCommand5.setActualQty(new Random(i).nextDouble());
+        whOdoLineCommands.add(whOdoLineCommand5);
+
+        odoCommand.setWhOdoLineCommands(whOdoLineCommands);
+        return odoCommand;
     }
 
 
@@ -307,13 +364,13 @@ public class ProcessTest extends TestNgBase {
         whOdoLineCommand1.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
         whOdoLineCommand1.setActualQty(new Random(i).nextDouble());
         whOdoLineCommands.add(whOdoLineCommand1);
-        if(i % 2 > 0) {
+        //if (i % 2 > 0) {
             WhOdoLineCommand whOdoLineCommand2 = new WhOdoLineCommand();
             whOdoLineCommand2.setSkuBarCode(i % 2 > 0 ? "192283108136" : "192283108137");
             whOdoLineCommand2.setQty(Double.parseDouble(t));
             whOdoLineCommand2.setActualQty(new Random(i).nextDouble());
             whOdoLineCommands.add(whOdoLineCommand2);
-        }
+        //}
         odoCommand.setWhOdoLineCommands(whOdoLineCommands);
         return odoCommand;
     }
