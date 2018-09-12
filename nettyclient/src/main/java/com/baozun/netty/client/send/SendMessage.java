@@ -30,20 +30,18 @@ public class SendMessage<T> {
 
     private static final Integer BUFFERSIZE = 3 * 1024 * 1024;
 
-    private RPCClient rpcClient;
+    private Channel channel;
 
-    public RPCClient getRpcClient() {
-        return rpcClient;
+    public Channel getChannel() {
+        return channel;
     }
 
-    public void setRpcClient(RPCClient rpcClient) {
-        this.rpcClient = rpcClient;
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     public String sendMessage(RuleCommand<T> message) throws Exception {
         List<Map<String, Object[]>> dataList = message.getRuleCommandList();
-        Channel channel = this.rpcClient.getChannel();
-
 
         if (!channel.isConnected())
             throw new Exception("connection failed");
@@ -70,7 +68,7 @@ public class SendMessage<T> {
 
     }
 
-    private static final ChannelFuture processMessage(Map<String, Object[]> map, Channel channel) throws IOException {
+    private synchronized ChannelFuture processMessage(Map<String, Object[]> map, Channel channel) throws IOException {
         byte[] bytes = compresss(TypeConvertTools.objToBytesByStream(map));
         ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer(BUFFERSIZE);
         dynamicDuffer.writeBytes(bytes);

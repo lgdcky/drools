@@ -21,7 +21,7 @@ public class ExceptionHandler {
     public static final void exceptionHandle(ChannelHandlerContext ctx, ExceptionEvent e) {
         if (e.getCause() instanceof ConnectException) {
             logger.warn("channel will be close!");
-            //ctx.getChannel().close();
+            ctx.getChannel().close();
         } else {
             logger.warn("unknow failed!");
         }

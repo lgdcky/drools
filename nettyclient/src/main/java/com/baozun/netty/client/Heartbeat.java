@@ -42,8 +42,12 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
         if (e.getState() == IdleState.ALL_IDLE)
             count++;
         if (count == 3) {
-            //e.getChannel().close();
-            logger.info("连接断开!");
+            e.getChannel().close();
+            logger.info("connection Broken!");
+            logger.info("reconnection server");
+            ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(TypeConvertTools.objToBytesByStream(HEARTBEATSTART))));
+            ctx.getChannel().write(bufferByte);
+            bufferByte.clear();
         }
     }
 

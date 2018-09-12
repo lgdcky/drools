@@ -52,8 +52,8 @@ public class NettyConfig {
             return channelPipeline;
         });
 
-        serverBootstrap.setOption("child.keepAlive", true);
-        serverBootstrap.setOption("child.tcpNoDelay", true);
+        serverBootstrap.setOption("keepAlive", true);
+        serverBootstrap.setOption("tcpNoDelay", true);
         return serverBootstrap;
     }
 

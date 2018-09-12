@@ -65,7 +65,7 @@ public class NettyConfig {
         return clientBootstrap;
     }
 
-    public InetSocketAddress tcpPort() {
+    public InetSocketAddress ServerAddress() {
         return new InetSocketAddress(nettyProperty.getIp(), nettyProperty.getPort());
     }
 

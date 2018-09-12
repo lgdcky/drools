@@ -25,7 +25,7 @@ public class ExceptionHandler {
             ctx.getChannel().close();
         } else if (e.getCause() instanceof IOException) {
             logger.warn("IO exception connection will be closed!");
-            ctx.getChannel().close();
+            //ctx.getChannel().close();
         } else {
             logger.warn("unknow failed!");
         }

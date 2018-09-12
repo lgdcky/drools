@@ -3,21 +3,14 @@ package com.baozun.netty.client;
 import com.baozun.netty.client.exception.ExceptionHandler;
 import com.baozun.netty.client.manager.MessageHandleManager;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import static com.baozun.netty.client.Heartbeat.HEARTBEATEND;
 import static com.baozun.netty.client.Heartbeat.HEARTBEATSTART;
 import static com.baozun.netty.client.tools.NettyMessageTool.convertBytes;
 import static com.baozun.netty.client.tools.NettyMessageTool.convertStringAndSend;
-import static com.baozun.netty.client.tools.NettyMessageTool.convertToString;
 
 /**
  * Created with IntelliJ IDEA.

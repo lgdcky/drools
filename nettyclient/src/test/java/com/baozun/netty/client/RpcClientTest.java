@@ -170,7 +170,7 @@ public class RpcClientTest {
         ruleCommand.setType("odoCommandFact");
 
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setRpcClient(rpcClient);
+        sendMessage.setChannel(rpcClient.getChannel());
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
         System.out.println(formatter.format(new Date()) + "   start");
         System.out.println(sendMessage.sendMessage(ruleCommand));

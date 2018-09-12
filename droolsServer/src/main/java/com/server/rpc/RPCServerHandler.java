@@ -3,17 +3,21 @@ package com.server.rpc;
 
 import com.server.manager.handle.MessageHandleManager;
 import com.server.rpc.exception.ExceptionHandler;
+import com.server.tools.TypeConvertTools;
+import org.jboss.netty.buffer.ByteBufferBackedChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.util.Map;
 
 import static com.server.rpc.heartbeat.Heartbeat.HEARTBEATEND;
 import static com.server.rpc.heartbeat.Heartbeat.HEARTBEATSTART;
+import static com.server.tools.CompressTool.compresss;
 import static com.server.tools.NettyMessageTool.convertBytes;
 import static com.server.tools.NettyMessageTool.convertStringAndSend;
 
@@ -45,7 +49,7 @@ public class RPCServerHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        System.out.println(Instant.now()+"   received");
+        logger.debug(ctx.getChannel().isConnected()+"  sss");
         Object message = convertBytes(ctx, e);
         if (message instanceof String) {
             if (HEARTBEATSTART.equals(message)) {
@@ -54,18 +58,26 @@ public class RPCServerHandler extends SimpleChannelHandler {
                 return;
             }
         } else {
-            long star = System.currentTimeMillis();
             byte[] bytes = messageHandleManager.messageHandle((Map) message);
-            System.out.println(System.currentTimeMillis()-star+"    do filter");
-            star = System.currentTimeMillis();
             ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer(BUFFERSIZE);
             dynamicDuffer.writeBytes(bytes);
+            logger.debug(ctx.getChannel().isConnected()+"");
             ctx.getChannel().write(dynamicDuffer);
-            System.out.println(System.currentTimeMillis()-star+"    do writer");
             dynamicDuffer.clear();
         }
     }
 
+    /**
+     * Invoked when something was written into a {@link Channel}.
+     *
+     * @param ctx
+     * @param e
+     */
+    @Override
+    public void writeComplete(ChannelHandlerContext ctx, WriteCompletionEvent e) throws Exception {
+        logger.info("write complete!");
+        super.writeComplete(ctx, e);
+    }
 
     /**
      * Invoked when an exception was raised by an I/O heartbeat or a
@@ -77,6 +89,7 @@ public class RPCServerHandler extends SimpleChannelHandler {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         logger.error(e.toString());
+        logger.debug(ctx.getChannel().isConnected()+"  sss");
         ExceptionHandler.exceptionHandle(ctx, e);
         super.exceptionCaught(ctx, e);
     }

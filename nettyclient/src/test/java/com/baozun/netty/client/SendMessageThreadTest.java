@@ -1,14 +1,12 @@
 package com.baozun.netty.client;
 
-import com.baozun.netty.client.command.RuleCommand;
 import com.server.project.wms4.OdoCommand;
-import com.baozun.netty.client.send.SendMessage;
 import com.server.project.wms4.WhOdoLineCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -21,34 +19,24 @@ import static com.baozun.netty.client.RpcClientTest.initClient;
  * Date: 9/6/18
  * Time: 7:11 PM
  */
-public class SendMessageTest {
+public class SendMessageThreadTest {
 
-    /*public static void main(String[] args) throws Exception {
-        sendTest();
-    }*/
+    private static Logger logger = LoggerFactory.getLogger(SendMessageThreadTest.class);
 
     private RPCClient rpcClient = initClient();
 
-    @Test(threadPoolSize = 1, invocationCount = 1)
+    @Test(threadPoolSize = 2, invocationCount = 5, timeOut = 10000)
     private void sendTest() throws Exception {
-        /*SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");*/
-
         List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
         for (int i = 0; i < 100000; i++) {
             odoCommands.add(dataBuilder(i));
         }
-        //System.out.println(formatter.format(new Date()) + "   start");
-       // long star = System.currentTimeMillis();
-        RuleCommand<OdoCommand> ruleCommand = new RuleCommand<OdoCommand>();
-        ruleCommand.setFactList(odoCommands);
-        ruleCommand.setGroup("测试一组");
-        ruleCommand.setType("odoCommandFact");
 
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setRpcClient(rpcClient);
-        System.out.println(sendMessage.sendMessage(ruleCommand));
-        //System.out.println(System.currentTimeMillis() - star + "   send message");
-        sendMessage = null;
+        Thread thread = null;
+        for (int i = 0; i < 2; i++) {
+            thread = new Thread(new SendMessageThread(odoCommands));
+            thread.run();
+        }
     }
 
     public static OdoCommand dataBuilders(int i) {

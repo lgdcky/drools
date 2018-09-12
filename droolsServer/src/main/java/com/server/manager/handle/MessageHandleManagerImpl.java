@@ -63,10 +63,7 @@ public class MessageHandleManagerImpl implements MessageHandleManager {
 
     public static byte[] doFilter(Object[] data,String type,String group,QueryManager queryManager) throws IOException {
         List<Object> dataList = Stream.of(data).collect(Collectors.toList());
-        queryManager.queryCommandWithStatelessKieSessionAsList(group, dataList);
-        byte[] bytes = TypeConvertTools.objToBytesByStream(dataList);
-        byte[] bytes_c = compresss(bytes);
-        return bytes_c;
+        return compresss(TypeConvertTools.objToBytesByStream(queryManager.queryCommandWithStatelessKieSessionAsList(group, dataList)));
     }
 
 
