@@ -38,7 +38,7 @@ public class RpcClientTest {
     @Test(threadPoolSize = 5, invocationCount = 10, timeOut = 10000)
     public void rpcConnectionTest() throws IOException {
 
-        RPCClient rpcClient = initClient();
+        ChannelFuture channelFuture = initClient();
 
         List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
         for (int i = 0; i < 5000; i++) {
@@ -84,13 +84,13 @@ public class RpcClientTest {
         System.out.println("send package size is " + decompose.size());
         ChannelBuffer bufferTest = ChannelBuffers.dynamicBuffer();
         bufferTest.writeBytes(bytes);
-        ChannelFuture channelFuture = rpcClient.getChannel().write(bufferByte);
+        channelFuture.getChannel().write(bufferByte);
         bufferTest.clear();
         System.out.println("===============================" + (System.currentTimeMillis() - start));
         System.out.println("Done");
     }
 
-    public static RPCClient initClient() {
+    public static ChannelFuture initClient() {
         NettyProperty nettyProperty = new NettyProperty();
         nettyProperty.setIdleReadTime(20);
         nettyProperty.setIdleTime(20);
@@ -110,8 +110,7 @@ public class RpcClientTest {
         config.setMessageHandleManager(new MessageHandleManagerImpl());
         RPCClient rpcClient = new RPCClient();
         rpcClient.setNettyConfig(config);
-        rpcClient.start();
-        return rpcClient;
+        return rpcClient.start();
     }
 
     public static OdoCommand dataBuilder(int i) {
@@ -157,7 +156,7 @@ public class RpcClientTest {
 
     @Test(threadPoolSize = 2, invocationCount = 5, timeOut = 10000)
     public void send() throws Exception {
-        RPCClient rpcClient = initClient();
+        ChannelFuture channelFuture = initClient();
 
         List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
         for (int i = 0; i < 10000; i++) {
@@ -170,7 +169,7 @@ public class RpcClientTest {
         ruleCommand.setType("odoCommandFact");
 
         SendMessage sendMessage = new SendMessage();
-        sendMessage.setChannel(rpcClient.getChannel());
+        sendMessage.setChannel(channelFuture.getChannel());
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
         System.out.println(formatter.format(new Date()) + "   start");
         System.out.println(sendMessage.sendMessage(ruleCommand));

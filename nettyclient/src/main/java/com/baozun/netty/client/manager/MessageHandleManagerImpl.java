@@ -5,7 +5,6 @@ import com.server.project.wms4.OdoCommand;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +19,6 @@ public class MessageHandleManagerImpl implements MessageHandleManager {
     @Override
     public void messageConvert(String message) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
-        //List<OdoCommand> list = TypeConvertTools.bytesToObjectByStream(message);
         System.out.println(formatter.format(new Date()) + "   end");
 
     }

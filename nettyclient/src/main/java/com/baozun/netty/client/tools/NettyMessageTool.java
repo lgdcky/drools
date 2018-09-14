@@ -6,6 +6,8 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.MessageEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,6 +22,8 @@ import static com.baozun.netty.client.tools.CompressTool.uncompresss;
  * Time: 2:14 PM
  */
 public class NettyMessageTool {
+
+    private static Logger logger = LoggerFactory.getLogger(NettyMessageTool.class);
 
     public static final String convertToString(ChannelHandlerContext ctx, MessageEvent e) throws IOException {
         Channel channel = ctx.getChannel();

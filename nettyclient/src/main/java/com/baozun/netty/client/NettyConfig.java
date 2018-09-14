@@ -3,6 +3,7 @@ package com.baozun.netty.client;
 import com.baozun.netty.client.manager.MessageHandleManager;
 import com.baozun.netty.client.property.NettyProperty;
 import org.jboss.netty.bootstrap.ClientBootstrap;
+import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelPipeline;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.Channels;
@@ -12,6 +13,7 @@ import org.jboss.netty.handler.codec.frame.LengthFieldPrepender;
 import org.jboss.netty.handler.timeout.IdleStateHandler;
 import org.jboss.netty.util.HashedWheelTimer;
 
+import javax.annotation.PostConstruct;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
@@ -44,6 +46,7 @@ public class NettyConfig {
         this.nettyProperty = nettyProperty;
     }
 
+    @PostConstruct
     public ClientBootstrap clientBootstrap() {
         ClientBootstrap clientBootstrap = new ClientBootstrap();
         clientBootstrap.setFactory(new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
@@ -61,6 +64,8 @@ public class NettyConfig {
                 return channelPipeline;
             }
         });
+        clientBootstrap.setOption("keepAlive", true);
+        clientBootstrap.setOption("tcpNoDelay", true);
         clientBootstrap.setOption("connectTimeoutMillis", nettyProperty.getTimeout());
         return clientBootstrap;
     }

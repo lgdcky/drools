@@ -6,6 +6,7 @@ import com.baozun.netty.client.property.NettyProperty;
 import com.baozun.netty.client.send.SendMessage;
 import com.server.project.wms4.OdoCommand;
 import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +24,7 @@ public class SendMessageThread implements Runnable {
 
     private List<OdoCommand> odoCommands;
 
-    private Channel channel;
-
     public SendMessageThread(List<OdoCommand> odoCommands) {
-        this.channel = channel;
         this.odoCommands = odoCommands;
     }
 
@@ -60,7 +58,7 @@ public class SendMessageThread implements Runnable {
     }
 
 
-    public RPCClient initClient() {
+    public ChannelFuture initClient() {
         NettyProperty nettyProperty = new NettyProperty();
         nettyProperty.setIdleReadTime(20);
         nettyProperty.setIdleTime(20);
@@ -80,7 +78,6 @@ public class SendMessageThread implements Runnable {
         config.setMessageHandleManager(new MessageHandleManagerImpl());
         RPCClient rpcClient = new RPCClient();
         rpcClient.setNettyConfig(config);
-        rpcClient.start();
-        return rpcClient;
+        return rpcClient.start();
     }
 }

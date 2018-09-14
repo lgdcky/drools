@@ -1,12 +1,20 @@
 package com.baozun.netty.client;
 
+import com.baozun.netty.client.command.RuleCommand;
+import com.baozun.netty.client.manager.MessageHandleManagerImpl;
+import com.baozun.netty.client.property.NettyProperty;
+import com.baozun.netty.client.send.SendMessage;
 import com.server.project.wms4.OdoCommand;
 import com.server.project.wms4.WhOdoLineCommand;
+import org.jboss.netty.channel.Channel;
+import org.jboss.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -23,19 +31,62 @@ public class SendMessageThreadTest {
 
     private static Logger logger = LoggerFactory.getLogger(SendMessageThreadTest.class);
 
-    private RPCClient rpcClient = initClient();
+    public static void main(String[] args) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
+        System.out.println(formatter.format(new Date()) + "   start");
+        SendMessageThreadTest sendMessageThreadTest = new SendMessageThreadTest();
+        sendMessageThreadTest.sendTest();
+    }
 
-    @Test(threadPoolSize = 2, invocationCount = 5, timeOut = 10000)
     private void sendTest() throws Exception {
         List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 2; i++) {
             odoCommands.add(dataBuilder(i));
         }
 
-        Thread thread = null;
-        for (int i = 0; i < 2; i++) {
-            thread = new Thread(new SendMessageThread(odoCommands));
+        for(int i=0;i<10;i++){
+            Thread thread = new Thread(new SendMessageThread(odoCommands));
             thread.run();
+        }
+    }
+
+    public static ChannelFuture initClient() {
+        NettyProperty nettyProperty = new NettyProperty();
+        nettyProperty.setIdleReadTime(20);
+        nettyProperty.setIdleTime(20);
+        nettyProperty.setIdleWriteTime(20);
+        nettyProperty.setInitialBytesToStrip(4);
+        nettyProperty.setLengthAdjustment(0);
+        nettyProperty.setLengthFieldLength(4);
+        nettyProperty.setLengthFieldOffset(0);
+        nettyProperty.setMaxFrameLength(Integer.MAX_VALUE);
+        nettyProperty.setPort(8092);
+        nettyProperty.setReadTime(20);
+        nettyProperty.setWriteTime(20);
+        nettyProperty.setIp("127.0.0.1");
+
+        NettyConfig config = new NettyConfig();
+        config.setNettyProperty(nettyProperty);
+        config.setMessageHandleManager(new MessageHandleManagerImpl());
+        RPCClient rpcClient = new RPCClient();
+        rpcClient.setNettyConfig(config);
+        return rpcClient.start();
+    }
+
+    public void send(List<OdoCommand> odoCommands) {
+        RuleCommand<OdoCommand> ruleCommand = new RuleCommand<OdoCommand>();
+        ruleCommand.setFactList(odoCommands);
+        ruleCommand.setGroup("测试一组");
+        ruleCommand.setType("odoCommandFact");
+
+        SendMessage sendMessage = new SendMessage();
+        Channel channel = initClient().getChannel();
+        System.out.println(channel.getClass().hashCode());
+        sendMessage.setChannel(channel);
+        try {
+            logger.info(sendMessage.sendMessage(ruleCommand));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

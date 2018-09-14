@@ -7,6 +7,8 @@ import org.jboss.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 import static com.baozun.netty.client.Heartbeat.HEARTBEATEND;
 import static com.baozun.netty.client.Heartbeat.HEARTBEATSTART;
 import static com.baozun.netty.client.tools.NettyMessageTool.convertBytes;
@@ -37,7 +39,12 @@ public class RPCClientHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        Object message = convertBytes(ctx, e);
+        Object message = null;
+        try {
+            message = convertBytes(ctx, e);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         if(message instanceof String){
             if (HEARTBEATSTART.equals(message)) {
                 convertStringAndSend(ctx, e, HEARTBEATEND);

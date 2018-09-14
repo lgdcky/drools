@@ -199,7 +199,7 @@ public class DbTest extends TestNgBase {
     @Test
     @Transactional
     public void deleteRule(){
-        ruleLoadManager.deleteRule(14l);
+        ruleLoadManager.deleteRule(25l);
     }
 
 

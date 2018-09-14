@@ -28,11 +28,11 @@ mybatis:
 
 logging:
   level:
-    org.springframework: DEBUG
+    org.springframework: ERROR
     com.server: DEBUG
     org.jboss.netty: DEBUG
-    org.kie: DEBUG
-    org.apache: DEBUG
+    org.kie: ERROR
+    org.apache: ERROR
 
 netty:
   server:

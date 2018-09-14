@@ -49,7 +49,6 @@ public class RPCServerHandler extends SimpleChannelHandler {
      */
     @Override
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
-        logger.debug(ctx.getChannel().isConnected()+"  sss");
         Object message = convertBytes(ctx, e);
         if (message instanceof String) {
             if (HEARTBEATSTART.equals(message)) {
@@ -59,9 +58,8 @@ public class RPCServerHandler extends SimpleChannelHandler {
             }
         } else {
             byte[] bytes = messageHandleManager.messageHandle((Map) message);
-            ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer(BUFFERSIZE);
+            ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer(bytes.length);
             dynamicDuffer.writeBytes(bytes);
-            logger.debug(ctx.getChannel().isConnected()+"");
             ctx.getChannel().write(dynamicDuffer);
             dynamicDuffer.clear();
         }
@@ -89,7 +87,6 @@ public class RPCServerHandler extends SimpleChannelHandler {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         logger.error(e.toString());
-        logger.debug(ctx.getChannel().isConnected()+"  sss");
         ExceptionHandler.exceptionHandle(ctx, e);
         super.exceptionCaught(ctx, e);
     }

@@ -19,13 +19,10 @@ public class RPCClient {
 
     private NettyConfig nettyConfig;
 
-    private ChannelFuture channelFuture;
-
-    @PostConstruct
-    public void start() {
-        channelFuture = nettyConfig.clientBootstrap().connect(nettyConfig.ServerAddress());
+    public ChannelFuture start() {
+        ChannelFuture channelFuture = nettyConfig.clientBootstrap().connect(nettyConfig.ServerAddress());
         logger.info("netty start!");
-        System.out.println("connect server!");
+        return channelFuture;
     }
 
     public NettyConfig getNettyConfig() {
@@ -34,10 +31,6 @@ public class RPCClient {
 
     public void setNettyConfig(NettyConfig nettyConfig) {
         this.nettyConfig = nettyConfig;
-    }
-
-    public Channel getChannel() {
-        return channelFuture.getChannel();
     }
 
 }

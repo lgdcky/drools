@@ -86,7 +86,7 @@ public class RuleCommand<T> {
         if (remainder == 0) {
             size = faceCount / count;
         } else {
-            if (faceCount < count) {
+            if (faceCount < count && bytes.length < DEFAULTSEGMENTATIO) {
                 size = faceCount;
                 remainder = 0;
             } else {
