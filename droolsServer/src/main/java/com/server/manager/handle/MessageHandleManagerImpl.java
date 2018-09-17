@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,33 +38,25 @@ public class MessageHandleManagerImpl implements MessageHandleManager {
     private QueryManager queryManager;
 
     @Override
-    public byte[] messageHandle(String message) throws IOException {
-        Map<String, Object[]> map = convertJsonStrToMap(message);
-        Object[] param = map.get("param");
-
-        String group = param[0].toString();
-        String type = param[1].toString();
-
-        Object[] data = map.get("data");
-
-        byte[] bytes = doFilter(data,type,group,queryManager);
-        return bytes;
-    }
-
-    @Override
     public byte[] messageHandle(Map message) throws IOException {
         long star = 0l;
-        Object[] param = (Object[]) message.get("param");
+        Object[] paramGroup = (Object[]) message.get("paramGroup");
+        Object[] paramType = (Object[]) message.get("paramType");
         Object[] data = (Object[]) message.get("data");
-        String group = param[0].toString();
-        String type = param[1].toString();
-        byte[] bytes = doFilter(data,type,group,queryManager);
+        String group = paramGroup[0].toString();
+        String type = paramType[0].toString();
+        byte[] bytes = doFilter(data, type, group, queryManager, paramGroup, paramType);
         return bytes;
     }
 
-    public static byte[] doFilter(Object[] data,String type,String group,QueryManager queryManager) throws IOException {
+    public static byte[] doFilter(Object[] data, String type, String group, QueryManager queryManager, Object[] paramGroup, Object[] paramType) throws IOException {
         List<Object> dataList = Stream.of(data).collect(Collectors.toList());
-        return compresss(TypeConvertTools.objToBytesByStream(queryManager.queryCommandWithStatelessKieSessionAsList(group, dataList)));
+        queryManager.queryCommandWithStatelessKieSessionAsList(group, dataList);
+        Map<String, Object[]> map = new HashMap<String, Object[]>();
+        map.put("paramGroup", paramGroup);
+        map.put("paramType", paramType);
+        map.put("data", dataList.toArray());
+        return compresss(TypeConvertTools.objToBytesByStream(map));
     }
 
 

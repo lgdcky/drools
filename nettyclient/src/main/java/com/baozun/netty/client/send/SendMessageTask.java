@@ -55,10 +55,11 @@ public class SendMessageTask extends CallableThreadTool<ChannelFuture> {
         boolean flag = true;
         int count = 0;
         while (!channel.isConnected()) {
-            if (10 < count++) {
+            logger.info("waitting ...");
+            if (50 < count++) {
                 throw new RuntimeException("connection wait time too long!");
             }
-            sleep(5);
+            sleep(1);
         }
     }
 }

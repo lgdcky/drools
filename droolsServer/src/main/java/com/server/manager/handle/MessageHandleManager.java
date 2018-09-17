@@ -12,8 +12,6 @@ import java.util.Map;
  */
 public interface MessageHandleManager {
 
-    public byte[] messageHandle(String message) throws IOException;
-
     public byte[] messageHandle(Map message) throws IOException;
 
 }

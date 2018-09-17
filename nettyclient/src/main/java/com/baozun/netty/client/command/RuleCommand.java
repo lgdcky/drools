@@ -102,12 +102,15 @@ public class RuleCommand<T> {
         Object[] array;
         Map<String, Object[]> map = null;
         Object[] dataArray = this.factList.toArray();
-        Object[] param = new Object[]{this.group, this.type};
+        Object[] paramGroup = new Object[]{this.group};
+        Object[] paramType = null;
         if (remainderNum == 0) {
             for (int i = 0; i < count; i++) {
                 map = new HashMap<>();
                 array = new Object[size];
-                map.put("param", param);
+                paramType = new Object[]{this.type + "_" + count + "_" + i};
+                map.put("paramGroup", paramGroup);
+                map.put("paramType", paramType);
                 System.arraycopy(dataArray, i * size, array, 0, size);
                 map.put("data", array);
                 dataList.add(map);
@@ -117,7 +120,9 @@ public class RuleCommand<T> {
             for (int i = 0; i < count - 1; i++) {
                 map = new HashMap<>();
                 array = new Object[size];
-                map.put("param", param);
+                paramType = new Object[]{this.type + "_" + count + "_" + i};
+                map.put("paramGroup", paramGroup);
+                map.put("paramType", paramType);
                 System.arraycopy(dataArray, i * size, array, 0, size);
                 map.put("data", array);
                 dataList.add(map);
@@ -125,7 +130,9 @@ public class RuleCommand<T> {
             }
             map = new HashMap<>();
             array = new Object[remainderNum];
-            map.put("param", param);
+            paramType = new Object[]{this.type + "_" + count + "_" + count};
+            map.put("paramGroup", paramGroup);
+            map.put("paramType", paramType);
             System.arraycopy(dataArray, (count - 1) * size, array, 0, remainderNum);
             map.put("data", array);
             dataList.add(map);
