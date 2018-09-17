@@ -4,6 +4,7 @@ import com.baozun.netty.client.command.RuleCommand;
 import com.baozun.netty.client.manager.MessageHandleManagerImpl;
 import com.baozun.netty.client.property.NettyProperty;
 import com.baozun.netty.client.send.SendMessage;
+import com.baozun.netty.client.tools.ThreadTool;
 import com.server.project.wms4.OdoCommand;
 import com.server.project.wms4.WhOdoLineCommand;
 import org.jboss.netty.channel.Channel;
@@ -34,18 +35,19 @@ public class SendMessageThreadTest {
     public static void main(String[] args) throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
         System.out.println(formatter.format(new Date()) + "   start");
+        ThreadTool threadTool = new ThreadTool();
         SendMessageThreadTest sendMessageThreadTest = new SendMessageThreadTest();
-        sendMessageThreadTest.sendTest();
+        sendMessageThreadTest.sendTest(threadTool);
     }
 
-    private void sendTest() throws Exception {
+    private void sendTest(ThreadTool threadTool) throws Exception {
         List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 100000; i++) {
             odoCommands.add(dataBuilder(i));
         }
 
-        for(int i=0;i<10;i++){
-            Thread thread = new Thread(new SendMessageThread(odoCommands));
+        for(int i=0;i<1;i++){
+            Thread thread = new Thread(new SendMessageThread(odoCommands,threadTool));
             thread.run();
         }
     }
@@ -84,7 +86,7 @@ public class SendMessageThreadTest {
         System.out.println(channel.getClass().hashCode());
         sendMessage.setChannel(channel);
         try {
-            logger.info(sendMessage.sendMessage(ruleCommand));
+            sendMessage.sendMessage(ruleCommand);
         } catch (Exception e) {
             e.printStackTrace();
         }

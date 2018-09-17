@@ -34,6 +34,16 @@ public class NettyProperty {
 
     private Integer timeout;
 
+    private Integer threadMun;
+
+    public Integer getThreadMun() {
+        return threadMun;
+    }
+
+    public void setThreadMun(Integer threadMun) {
+        this.threadMun = threadMun;
+    }
+
     public Integer getMaxFrameLength() {
         return maxFrameLength;
     }

@@ -46,14 +46,38 @@ public class RPCClientHandler extends SimpleChannelHandler {
             ex.printStackTrace();
         }
         if(message instanceof String){
+            System.out.println(message);
             if (HEARTBEATSTART.equals(message)) {
                 convertStringAndSend(ctx, e, HEARTBEATEND);
-            }else{
-                return;
             }
         }else{
             messageHandleManager.messageHandle(message);
         }
+    }
+
+    /**
+     * Invoked when something was written into a {@link Channel}.
+     *
+     * @param ctx
+     * @param e
+     */
+    @Override
+    public void writeComplete(ChannelHandlerContext ctx, WriteCompletionEvent e) throws Exception {
+        logger.info("info write complete!");
+        super.writeComplete(ctx, e);
+    }
+
+    /**
+     * Invoked when a child {@link Channel} was closed.
+     * (e.g. the accepted connection was closed)
+     *
+     * @param ctx
+     * @param e
+     */
+    @Override
+    public void childChannelClosed(ChannelHandlerContext ctx, ChildChannelStateEvent e) throws Exception {
+        System.out.println("childChannel is closed!");
+        super.childChannelClosed(ctx, e);
     }
 
     /**

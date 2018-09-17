@@ -41,7 +41,7 @@ public class NettyConfig {
     public ServerBootstrap bootstrap() throws InterruptedException {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.setFactory(new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
-                Executors.newCachedThreadPool()));
+                Executors.newCachedThreadPool(),rpcServerConfig.getThreadNum()));
         serverBootstrap.setPipelineFactory(() -> {
             ChannelPipeline channelPipeline = Channels.pipeline();
             channelPipeline.addLast("timeout", new IdleStateHandler(new HashedWheelTimer(), rpcServerConfig.getIdleReadTime(), rpcServerConfig.getWriteTime(), rpcServerConfig.getIdleTime()));

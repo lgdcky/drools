@@ -11,6 +11,7 @@ import org.jboss.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.time.Instant;
 import java.util.Map;
@@ -33,6 +34,8 @@ public class RPCServerHandler extends SimpleChannelHandler {
     private static Logger logger = LoggerFactory.getLogger(RPCServerHandler.class);
 
     private MessageHandleManager messageHandleManager;
+
+    private static final String RECEIVED = "received";
 
     private static final Integer BUFFERSIZE = 3 * 1024 * 1024;
 

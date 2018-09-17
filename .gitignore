@@ -15,3 +15,5 @@ nettyclient/\.idea/
 nettyclient/target/
 
 nettyclient/nettyclient\.iml
+
+nettyclient/netty-client\.iml

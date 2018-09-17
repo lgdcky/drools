@@ -10,8 +10,6 @@ import java.io.IOException;
  */
 public interface MessageHandleManager {
 
-    public void messageConvert(String message);
-
     public void messageHandle(Object message) throws IOException;
 
 }

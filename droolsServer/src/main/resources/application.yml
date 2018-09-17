@@ -44,6 +44,7 @@ netty:
     idleReadTime: 20
     idleWriteTime: 20
     timeout: 10000
+    threadNum: 4
   bueffer:
     maxFrameLength: 2147483647
     lengthFieldOffset: 0

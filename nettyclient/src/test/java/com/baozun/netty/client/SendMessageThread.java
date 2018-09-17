@@ -4,6 +4,7 @@ import com.baozun.netty.client.command.RuleCommand;
 import com.baozun.netty.client.manager.MessageHandleManagerImpl;
 import com.baozun.netty.client.property.NettyProperty;
 import com.baozun.netty.client.send.SendMessage;
+import com.baozun.netty.client.tools.ThreadTool;
 import com.server.project.wms4.OdoCommand;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -24,8 +25,11 @@ public class SendMessageThread implements Runnable {
 
     private List<OdoCommand> odoCommands;
 
-    public SendMessageThread(List<OdoCommand> odoCommands) {
+    private ThreadTool threadTool;
+
+    public SendMessageThread(List<OdoCommand> odoCommands,ThreadTool threadTool) {
         this.odoCommands = odoCommands;
+        this.threadTool = threadTool;
     }
 
     /**
@@ -48,10 +52,10 @@ public class SendMessageThread implements Runnable {
 
         SendMessage sendMessage = new SendMessage();
         Channel channel = initClient().getChannel();
-        System.out.println(channel.getClass().hashCode());
         sendMessage.setChannel(channel);
+        sendMessage.setThreadTool(threadTool);
         try {
-            logger.info(sendMessage.sendMessage(ruleCommand));
+            sendMessage.sendMessage(ruleCommand);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,6 +75,7 @@ public class SendMessageThread implements Runnable {
         nettyProperty.setPort(8092);
         nettyProperty.setReadTime(20);
         nettyProperty.setWriteTime(20);
+        nettyProperty.setThreadMun(2);
         nettyProperty.setIp("127.0.0.1");
 
         NettyConfig config = new NettyConfig();

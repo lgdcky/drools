@@ -28,6 +28,16 @@ public class RPCServerConfig {
 
     private Integer timeout;
 
+    private Integer threadNum;
+
+    public Integer getThreadNum() {
+        return threadNum;
+    }
+
+    public void setThreadNum(Integer threadNum) {
+        this.threadNum = threadNum;
+    }
+
     public Integer getReadTime() {
         return readTime;
     }

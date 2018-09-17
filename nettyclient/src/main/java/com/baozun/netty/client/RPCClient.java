@@ -1,11 +1,10 @@
 package com.baozun.netty.client;
 
-import org.jboss.netty.channel.Channel;
+import com.baozun.netty.client.manager.OperationManager;
+import com.baozun.netty.client.send.CustChannelFutureListener;
 import org.jboss.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.annotation.PostConstruct;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,8 +18,11 @@ public class RPCClient {
 
     private NettyConfig nettyConfig;
 
+    private OperationManager operationManager;
+
     public ChannelFuture start() {
         ChannelFuture channelFuture = nettyConfig.clientBootstrap().connect(nettyConfig.ServerAddress());
+        channelFuture.addListener(new CustChannelFutureListener(operationManager));
         logger.info("netty start!");
         return channelFuture;
     }

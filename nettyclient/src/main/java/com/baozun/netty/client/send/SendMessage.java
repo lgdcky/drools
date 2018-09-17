@@ -1,23 +1,17 @@
 package com.baozun.netty.client.send;
 
-import com.baozun.netty.client.NettyConfig;
-import com.baozun.netty.client.RPCClient;
 import com.baozun.netty.client.command.RuleCommand;
-import com.baozun.netty.client.manager.MessageHandleManagerImpl;
-import com.baozun.netty.client.property.NettyProperty;
-import com.baozun.netty.client.tools.TypeConvertTools;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
+import com.baozun.netty.client.tools.ThreadTool;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import static com.baozun.netty.client.tools.CompressTool.compresss;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +30,8 @@ public class SendMessage<T> {
 
     private static final String QUERYFAILED = "FAILED";
 
+    private ThreadTool threadTool;
+
     private Channel channel;
 
     public Channel getChannel() {
@@ -46,47 +42,23 @@ public class SendMessage<T> {
         this.channel = channel;
     }
 
-    public String sendMessage(RuleCommand<T> message) throws Exception {
+    public ThreadTool getThreadTool() {
+        return threadTool;
+    }
+
+    public void setThreadTool(ThreadTool threadTool) {
+        this.threadTool = threadTool;
+    }
+
+    public List<Map<String, Object[]>> sendMessage(RuleCommand<T> message) throws Exception {
         List<Map<String, Object[]>> dataList = message.getRuleCommandList();
-        int count=0;
 
-        while (!channel.isConnected()) {
-            logger.warn("connection failed");
-            logger.warn("链接绑定状态 "+channel.isBound()+"   "+count++);
-        }
+        List<Future<ChannelFuture>> resultList = new LinkedList<>();
 
-        logger.warn("链接绑定状态 "+channel.isBound()+"  bound  "+count++);
-
-        ChannelFuture channelFuture = null;
-        int failed = 0;
+        ExecutorService executorService = threadTool.createExecutorService();
         for (Map<String, Object[]> map : dataList) {
-            channelFuture = processMessage(map, channel);
-            Thread.sleep(100);
+            resultList.add(executorService.submit(new SendMessageTask(map, channel)));
         }
-
-        channelFuture.awaitUninterruptibly();
-
-        assert channelFuture.isDone();
-
-        if (channelFuture.isCancelled()) {
-            channelFuture.getChannel().close();
-            return QUERYFAILED;
-        } else if (!channelFuture.isSuccess()) {
-            channelFuture.getCause().printStackTrace();
-            return QUERYFAILED;
-        } else {
-            return QUERYALLSUCCESS;
-        }
-
+        return dataList;
     }
-
-    private synchronized ChannelFuture processMessage(Map<String, Object[]> map, Channel channel) throws IOException {
-        byte[] bytes = compresss(TypeConvertTools.objToBytesByStream(map));
-        ChannelBuffer dynamicDuffer = ChannelBuffers.dynamicBuffer(bytes.length);
-        dynamicDuffer.writeBytes(bytes);
-        ChannelFuture channelFuture = channel.write(dynamicDuffer);
-        dynamicDuffer.clear();
-        return channelFuture;
-    }
-
 }

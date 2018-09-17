@@ -13,15 +13,9 @@ import java.util.List;
  * User: Dean Lu
  * Date: 9/7/18
  * Time: 3:17 PM
+ * 接受到信息的例子
  */
 public class MessageHandleManagerImpl implements MessageHandleManager {
-
-    @Override
-    public void messageConvert(String message) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:SSS");
-        System.out.println(formatter.format(new Date()) + "   end");
-
-    }
 
     @Override
     public void messageHandle(Object message) throws IOException {
