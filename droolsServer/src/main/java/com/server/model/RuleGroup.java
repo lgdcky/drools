@@ -16,6 +16,15 @@ public class RuleGroup implements Serializable {
     private String groupCode;
     private String orderNo;
     private Date create_time;
+    private Integer state;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Long getId() {
         return id;

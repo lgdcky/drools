@@ -4,11 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.server.model.FactClassDescriptionInfo;
 import com.server.tools.FactLoader;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public class DroolsFactLoadTest extends TestNgBase {
     private FactLoader factLoader;
 
     @Test
-    public void loadTest(){
+    public void loadTest() throws IOException {
         factLoader.setClassPath("/command/*.class");
         List<FactClassDescriptionInfo> factClassDescriptionInfoList = factLoader.entityInfo();
         ObjectMapper objectMapper = new ObjectMapper();

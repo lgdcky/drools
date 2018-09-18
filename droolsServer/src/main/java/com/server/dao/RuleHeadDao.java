@@ -19,7 +19,7 @@ public interface RuleHeadDao {
 
     Long saveRuleHead(RuleHead ruleHead);
 
-    RuleHead findRuleHead(RuleHead ruleHead);
+    List<RuleHead> findRuleHead(RuleHead ruleHead);
 
     Long deleteRuleHeadByParameter(RuleHead ruleHead);
 

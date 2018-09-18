@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -45,7 +46,7 @@ public class ProcessTest extends TestNgBase {
 
     /*public static final String PACKAGENAME = "com.server.command";*/
 
-    public List<FactClassDescriptionInfo> loadTestFact() {
+    public List<FactClassDescriptionInfo> loadTestFact() throws IOException {
         factLoader.setClassPath("/command/*.class");
         return factLoader.entityInfo();
     }

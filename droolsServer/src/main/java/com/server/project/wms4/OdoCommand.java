@@ -2,6 +2,7 @@ package com.server.project.wms4;
 
 import com.server.tools.EntityAttributeInfo;
 import org.kie.api.command.Command;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
@@ -13,9 +14,12 @@ import java.util.List;
  * Time: 9:57 AM
  */
 
+@Component
 @EntityAttributeInfo.ClassAnnotation(name = "OdoCommand", desc = "测试出库单模板")
 public class OdoCommand implements Command<OdoCommand> {
     private static final long serialVersionUID = 5523630809017120661L;
+
+    @EntityAttributeInfo.FieldAnnotation(name = "odoCode", type = "odoCode", desc = "出库单编码")
     private String odoCode;
     private String extCode;
     private String ecOrderCode;

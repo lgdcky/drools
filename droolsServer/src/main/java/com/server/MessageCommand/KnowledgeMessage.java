@@ -15,6 +15,20 @@ public class KnowledgeMessage implements Serializable {
 
     private String message;
 
+    private String state;
+
+    public void KnowledgeMessage(String message, String state) {
+        this.message = message;
+        this.state = state;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
 
     public String getMessage() {
         return message;

@@ -41,46 +41,44 @@ public class FactLoader {
     @Autowired
     private ApplicationContext applicationContext;
 
-    public List<FactClassDescriptionInfo> entityInfo() {
+    public List<FactClassDescriptionInfo> entityInfo() throws IOException {
         List<FactClassDescriptionInfo> factClassDescriptionInfoList = new ArrayList<>();
         PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
-        try {
-            Resource[] metaInfResources = pathMatchingResourcePatternResolver.getResources(MODELPATH + this.classPath);
-            Arrays.stream(metaInfResources).forEach(resource -> {
-                FactClassDescriptionInfo factClassDescriptionInfo = new FactClassDescriptionInfo();
-                List<FactFieldDescriptionInfo> factFieldDescriptionInfoList = new ArrayList<>();
+        Resource[] metaInfResources = pathMatchingResourcePatternResolver.getResources(MODELPATH + this.classPath);
+        Arrays.stream(metaInfResources).forEach(resource -> {
+            FactClassDescriptionInfo factClassDescriptionInfo = new FactClassDescriptionInfo();
+            List<FactFieldDescriptionInfo> factFieldDescriptionInfoList = new ArrayList<>();
 
-                String className = resource.getFilename().substring(0, resource.getFilename().indexOf("."));
-                className = className.substring(0, 1).toLowerCase() + className.substring(1, className.length());
-                try {
-                    Object object = applicationContext.getBean(className);
-                    Annotation[] annotationClass = object.getClass().getAnnotations();
-                    Arrays.stream(annotationClass).forEach(annotation -> {
-                        if (annotation instanceof EntityAttributeInfo.ClassAnnotation) {
-                            factClassDescriptionInfo.setClassName(((EntityAttributeInfo.ClassAnnotation) annotation).name());
-                            factClassDescriptionInfo.setDescription(((EntityAttributeInfo.ClassAnnotation) annotation).desc());
-                        }
-                    });
-                    if (null != factClassDescriptionInfo.getDescription()) {
-                        Field[] fields = object.getClass().getDeclaredFields();
-                        Arrays.stream(fields).forEach(field -> {
-                            FactFieldDescriptionInfo factFieldDescriptionInfo = new FactFieldDescriptionInfo();
-                            Annotation annotationField = field.getAnnotation(EntityAttributeInfo.FieldAnnotation.class);
+            String className = resource.getFilename().substring(0, resource.getFilename().indexOf("."));
+            className = className.substring(0, 1).toLowerCase() + className.substring(1, className.length());
+            try {
+                Object object = applicationContext.getBean(className);
+                Annotation[] annotationClass = object.getClass().getAnnotations();
+                Arrays.stream(annotationClass).forEach(annotation -> {
+                    if (annotation instanceof EntityAttributeInfo.ClassAnnotation) {
+                        factClassDescriptionInfo.setClassName(((EntityAttributeInfo.ClassAnnotation) annotation).name());
+                        factClassDescriptionInfo.setDescription(((EntityAttributeInfo.ClassAnnotation) annotation).desc());
+                    }
+                });
+                if (null != factClassDescriptionInfo.getDescription()) {
+                    Field[] fields = object.getClass().getDeclaredFields();
+                    Arrays.stream(fields).forEach(field -> {
+                        FactFieldDescriptionInfo factFieldDescriptionInfo = new FactFieldDescriptionInfo();
+                        Annotation annotationField = field.getAnnotation(EntityAttributeInfo.FieldAnnotation.class);
+                        if (null != annotationField) {
                             factFieldDescriptionInfo.setFieldName(((EntityAttributeInfo.FieldAnnotation) annotationField).name());
                             factFieldDescriptionInfo.setDescription(((EntityAttributeInfo.FieldAnnotation) annotationField).desc());
                             factFieldDescriptionInfo.setType(((EntityAttributeInfo.FieldAnnotation) annotationField).type());
                             factFieldDescriptionInfoList.add(factFieldDescriptionInfo);
-                        });
-                        factClassDescriptionInfo.setFactFieldDescriptionInfoList(factFieldDescriptionInfoList);
-                        factClassDescriptionInfoList.add(factClassDescriptionInfo);
-                    }
-                } catch (NoSuchBeanDefinitionException ex) {
-                    logger.error(ex.toString());
+                        }
+                    });
+                    factClassDescriptionInfo.setFactFieldDescriptionInfoList(factFieldDescriptionInfoList);
+                    factClassDescriptionInfoList.add(factClassDescriptionInfo);
                 }
-            });
-        } catch (IOException e) {
-            logger.error(e.toString());
-        }
+            } catch (NoSuchBeanDefinitionException | NullPointerException ex) {
+                logger.error(ex.toString());
+            }
+        });
         return factClassDescriptionInfoList;
     }
 

@@ -6,7 +6,6 @@ import com.server.model.RuleHead;
 import com.server.model.RuleInfo;
 import com.server.model.RuleOp;
 import org.drools.core.io.impl.BaseResource;
-import org.kie.api.io.Resource;
 
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,7 @@ public interface RuleLoadManager {
 
     public void updateRuleGroup(RuleGroup ruleGroup);
 
-    public void deleteRuleGroup(RuleGroup ruleGroup);
+    public Long deleteRuleGroup(RuleGroup ruleGroup);
 
     public void saveRuleGroup(RuleGroup ruleGroup);
 
@@ -47,7 +46,7 @@ public interface RuleLoadManager {
 
     public List<RuleHead> findAllRuleHead();
 
-    public RuleHead findRuleHead(RuleHead ruleHead);
+    public List<RuleHead> findRuleHead(RuleHead ruleHead);
 
     public void updateRuleOp(RuleOp ruleOp);
 

@@ -22,7 +22,7 @@ public final class TypeConvertTools {
 
     private static JSONObject jsonObject = new JSONObject(50000);
 
-    private static JSONArray jsonArray = new JSONArray(50000);
+    private static JSONArray jsonArray = new JSONArray(20);
 
     private static final Integer BUFFERSIZE = 3 * 1024 * 1024;
 
@@ -58,6 +58,14 @@ public final class TypeConvertTools {
             object = in.readObject();
         }
         return object;
+    }
+
+    public static String objectToJson(Object resource) throws IOException, ClassNotFoundException {
+        return jsonObject.toJSONString(resource, serializeConfig);
+    }
+
+    public static String objectListToJson(Object resource) throws IOException, ClassNotFoundException {
+        return jsonArray.toJSONString(resource);
     }
 
 }

@@ -2,6 +2,7 @@ package com.server.project.wms4;
 
 import com.server.tools.EntityAttributeInfo;
 import org.kie.api.command.Command;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  * Date: 6/6/18
  * Time: 9:58 AM
  */
+@Component
 @EntityAttributeInfo.ClassAnnotation(name = "WhOdoLineCommand", desc = "测试出库单明细模板")
 public class WhOdoLineCommand implements Command<WhOdoLineCommand> {
     private static final long serialVersionUID = -2071411398425434080L;

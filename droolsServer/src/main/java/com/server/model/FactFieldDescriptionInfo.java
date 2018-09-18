@@ -1,7 +1,5 @@
 package com.server.model;
 
-import java.util.List;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
