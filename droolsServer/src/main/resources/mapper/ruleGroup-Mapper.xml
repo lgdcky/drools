@@ -40,6 +40,26 @@
         </if>
     </select>
 
+    <select id="findRuleGroupByParameterWithPage" parameterType="map" resultMap="RuleGroup" flushCache="true">
+        SELECT
+        <include refid="RuleGroup_Column_List"/>
+        FROM ruleGroup
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+        <if test="groupCode!=null">
+            and groupCode =#{groupCode}
+        </if>
+        <if test="pageNum!=null">
+            limit #{pageNum},#{size}
+        </if>
+    </select>
+
     <delete id="deleteRuleGroupByParameter" parameterType="com.server.model.RuleGroup">
         DELETE FROM
         ruleGroup

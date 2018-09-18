@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/fact")
-public class FactInfoController {
+public class FactInfoController extends BaseController {
 
     @Autowired
     private FactManager factManager;

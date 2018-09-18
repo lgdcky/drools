@@ -5,6 +5,7 @@ import com.server.model.RuleHead;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,6 +21,8 @@ public interface RuleHeadDao {
     Long saveRuleHead(RuleHead ruleHead);
 
     List<RuleHead> findRuleHead(RuleHead ruleHead);
+
+    List<RuleHead> findRuleHeadWithPage(Map<String,Object> map);
 
     Long deleteRuleHeadByParameter(RuleHead ruleHead);
 

@@ -42,4 +42,8 @@ public interface RuleOperationManager {
 
     public RuleMessage findRuleByRuleGroup(RuleGroup ruleGroup);
 
+    public RuleMessage findRuleHeadWithPage(RuleHead ruleHead,Integer pageNum,Integer size);
+
+    public RuleMessage findRuleByRuleGroupWithPage(RuleGroup ruleGroup,Integer pageNum,Integer size);
+
 }

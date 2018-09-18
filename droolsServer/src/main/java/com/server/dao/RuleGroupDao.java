@@ -6,6 +6,7 @@ import com.server.model.RuleHead;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,6 +20,8 @@ public interface RuleGroupDao {
     void saveRuleGroup(RuleGroup ruleGroup);
 
     List<RuleGroup> findRuleGroupByParameter(RuleGroup ruleGroup);
+
+    List<RuleGroup> findRuleGroupByParameterWithPage(Map<String,Object> map);
 
     Long deleteRuleGroupByParameter(RuleGroup ruleGroup);
 

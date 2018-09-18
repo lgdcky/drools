@@ -33,29 +33,53 @@
         FROM ruleHead
     </select>
 
-    <select id="findRuleHead" parameterType="java.lang.Long" resultMap="RuleHead" flushCache="true">
+    <select id="findRuleHead" parameterType="list" resultMap="RuleHead" flushCache="true">
         SELECT
         <include refid="RuleHead_Column_List"/>
         FROM ruleHead
         WHERE
         1=1
         <if test="id!=null">
-            AND id = #{id};
+            AND id = #{id}
         </if>
         <if test="ruleName!=null">
-            AND ruleName = #{ruleName};
+            AND ruleName = #{ruleName}
         </if>
         <if test="packageName!=null">
-            AND packageName = #{packageName};
+            AND packageName = #{packageName}
         </if>
         <if test="remarks!=null">
-            AND remarks = #{remarks};
+            AND remarks = #{remarks}
         </if>
         <if test="state!=null">
-            AND state = #{state};
+            AND state = #{state}
         </if>
+    </select>
 
-
+    <select id="findRuleHeadWithPage" parameterType="map" resultMap="RuleHead" flushCache="true">
+        SELECT
+        <include refid="RuleHead_Column_List"/>
+        FROM ruleHead
+        WHERE
+        1=1
+        <if test="id!=null">
+            AND id = #{id}
+        </if>
+        <if test="ruleName!=null">
+            AND ruleName = #{ruleName}
+        </if>
+        <if test="packageName!=null">
+            AND packageName = #{packageName}
+        </if>
+        <if test="remarks!=null">
+            AND remarks = #{remarks}
+        </if>
+        <if test="state!=null">
+            AND state = #{state}
+        </if>
+        <if test="pageNum!=null">
+            limit #{pageNum},#{size}
+        </if>
     </select>
 
     <delete id="deleteRuleHeadByParameter" parameterType="java.lang.Long">

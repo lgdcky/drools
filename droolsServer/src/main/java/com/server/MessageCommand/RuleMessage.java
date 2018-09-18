@@ -40,4 +40,12 @@ public class RuleMessage<T> {
     public void setError(String error) {
         this.error = error;
     }
+
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
+    }
 }

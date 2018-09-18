@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping("/rule")
-public class RuleController {
+public class RuleController extends BaseController{
 
     @Autowired
     private RuleOperationManager ruleOperationManager;
