@@ -1,8 +1,6 @@
 package com.server.MessageCommand;
 
 
-import org.kie.internal.builder.KnowledgeBuilder;
-
 import java.io.Serializable;
 
 /**
@@ -13,11 +11,15 @@ import java.io.Serializable;
  */
 public class KnowledgeMessage implements Serializable {
 
+    public static final String SUCCESS = "success";
+
+    public static final String FAILED = "failed";
+
     private String message;
 
     private String state;
 
-    public void KnowledgeMessage(String message, String state) {
+    public KnowledgeMessage(String message, String state) {
         this.message = message;
         this.state = state;
     }

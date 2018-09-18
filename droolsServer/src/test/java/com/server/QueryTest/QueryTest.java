@@ -1,6 +1,6 @@
 package com.server.QueryTest;
 
-import com.server.knowledgebasemanager.KnowLedgeBaseManger;
+import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.command.OdoCommand;
 import com.server.command.WhOdoLineCommand;
 import com.server.manager.query.QueryManager;

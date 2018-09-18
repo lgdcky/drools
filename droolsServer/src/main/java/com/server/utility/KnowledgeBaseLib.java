@@ -1,7 +1,7 @@
 package com.server.utility;
 
 import com.server.exception.KnowLedgeBuilderException;
-import com.server.knowledgebasemanager.KnowLedgeBaseManger;
+import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.manager.rule.RuleLoadManager;
 import org.drools.core.impl.InternalKnowledgeBase;
 import org.drools.core.io.impl.BaseResource;

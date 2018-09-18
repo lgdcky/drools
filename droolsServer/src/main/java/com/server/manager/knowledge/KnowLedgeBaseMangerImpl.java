@@ -1,4 +1,4 @@
-package com.server.knowledgebasemanager;
+package com.server.manager.knowledge;
 
 import com.server.MessageCommand.KnowledgeMessage;
 import com.server.exception.KnowLedgeBuilderException;
@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.function.BiConsumer;
+
+import static com.server.MessageCommand.KnowledgeMessage.FAILED;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,13 +62,13 @@ public class KnowLedgeBaseMangerImpl implements KnowLedgeBaseManger {
     public KnowledgeMessage testRule(List<BaseResource> resources) {
         KnowledgeBuilder knowledgeBuilder = droolsServicesBuilderFactory.createKnowledgeBuilder();
         InternalKnowledgeBase internalKnowledgeBase = droolsServicesBuilderFactory.createInternalKnowledgeBase();
-        KnowledgeMessage knowledgeMessage = new KnowledgeMessage();
+        KnowledgeMessage knowledgeMessage = null;
         try {
             droolsServicesBuilderFactory.addRules(knowledgeBuilder, resources, ResourceType.DRL);
             knowledgeBuilder.undo();
-        }catch (KnowLedgeBuilderException ruleException){
-            knowledgeMessage.setMessage(ruleException.toString());
-        }finally {
+        } catch (KnowLedgeBuilderException ruleException) {
+            knowledgeMessage = new KnowledgeMessage(ruleException.toString(), FAILED);
+        } finally {
             internalKnowledgeBase = null;
         }
         return knowledgeMessage;

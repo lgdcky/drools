@@ -1,10 +1,7 @@
 package com.server.factory;
 
 import com.server.SpringBootDroolsApplication;
-import com.server.knowledgebasemanager.KnowLedgeBaseManger;
-import org.drools.compiler.lang.DrlDumper;
-import org.drools.compiler.lang.api.DescrFactory;
-import org.drools.compiler.lang.api.PackageDescrBuilder;
+import com.server.manager.knowledge.KnowLedgeBaseManger;
 import org.drools.core.impl.InternalKnowledgeBase;
 import org.drools.core.io.impl.BaseResource;
 import org.drools.core.io.impl.ByteArrayResource;

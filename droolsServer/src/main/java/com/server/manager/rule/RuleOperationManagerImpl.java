@@ -4,7 +4,7 @@ import com.server.MessageCommand.KnowledgeMessage;
 import com.server.MessageCommand.RuleMessage;
 import com.server.command.RuleCommand;
 import com.server.dao.RuleDao;
-import com.server.knowledgebasemanager.KnowLedgeBaseManger;
+import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.model.RuleGroup;
 import com.server.model.RuleHead;
 import org.drools.core.io.impl.BaseResource;

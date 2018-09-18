@@ -4,7 +4,7 @@ import com.server.MessageCommand.KnowledgeMessage;
 import com.server.project.wms4.OdoCommand;
 import com.server.command.RuleCommand;
 import com.server.project.wms4.WhOdoLineCommand;
-import com.server.knowledgebasemanager.KnowLedgeBaseManger;
+import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.model.*;
 import com.server.manager.query.QueryManager;
 import com.server.manager.rule.RuleLoadManager;

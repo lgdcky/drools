@@ -26,7 +26,7 @@ public class KnowLedgeBaseHandler {
     @Autowired
     private KnowledgeBaseLib knowledgeBaseLib;
 
-    @Pointcut("execution(public * com.server.knowledgebasemanager.KnowLedgeBaseMangerImpl.*(..))")
+    @Pointcut("execution(public * com.server.manager.knowledge.KnowLedgeBaseMangerImpl.*(..))")
     public void pointCut() {
     };
 

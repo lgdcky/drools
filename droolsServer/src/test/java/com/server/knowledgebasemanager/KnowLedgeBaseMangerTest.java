@@ -1,6 +1,7 @@
 package com.server.knowledgebasemanager;
 
 import com.server.SpringBootDroolsApplication;
+import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.utility.KnowledgeBaseLib;
 import org.junit.Test;
 import org.junit.runner.RunWith;

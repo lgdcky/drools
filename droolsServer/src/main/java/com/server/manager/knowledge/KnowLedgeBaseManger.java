@@ -1,4 +1,4 @@
-package com.server.knowledgebasemanager;
+package com.server.manager.knowledge;
 
 import com.server.MessageCommand.KnowledgeMessage;
 import org.drools.core.impl.InternalKnowledgeBase;

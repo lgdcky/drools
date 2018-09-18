@@ -1,12 +1,11 @@
 package com.server.manager.init;
 
-import com.server.knowledgebasemanager.KnowLedgeBaseManger;
+import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.manager.rule.RuleLoadManager;
 import org.drools.core.io.impl.BaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
