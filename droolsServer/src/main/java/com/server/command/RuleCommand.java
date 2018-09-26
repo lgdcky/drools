@@ -16,33 +16,15 @@ public class RuleCommand implements Serializable {
 
     private Long id;
 
-    private String ruleName;
+    private String groupCode;
 
-    private String packageName;
+    private String groupName;
 
-    private Date create_Time;
+    private Date create_time;
 
-    private String remarks;
+    private String description;
 
-    private Integer state;
-
-    private String ruleString;
-
-    private List<RuleGlobal> ruleGlobals;
-
-    private List<RuleInfo> ruleInfos;
-
-    private List<RuleGroup> ruleGroup;
-
-    private List<RuleOp> ruleOps;
-
-    public List<RuleOp> getRuleOps() {
-        return ruleOps;
-    }
-
-    public void setRuleOps(List<RuleOp> ruleOps) {
-        this.ruleOps = ruleOps;
-    }
+    private List<RuleGroupRef> ruleGroupRefList;
 
     public Long getId() {
         return id;
@@ -52,75 +34,43 @@ public class RuleCommand implements Serializable {
         this.id = id;
     }
 
-    public String getRuleName() {
-        return ruleName;
+    public String getGroupCode() {
+        return groupCode;
     }
 
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
     }
 
-    public String getPackageName() {
-        return packageName;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
-    public Date getCreate_Time() {
-        return create_Time;
+    public Date getCreate_time() {
+        return create_time;
     }
 
-    public void setCreate_Time(Date create_Time) {
-        this.create_Time = create_Time;
+    public void setCreate_time(Date create_time) {
+        this.create_time = create_time;
     }
 
-    public String getRemarks() {
-        return remarks;
+    public String getDescription() {
+        return description;
     }
 
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public Integer getState() {
-        return state;
+    public List<RuleGroupRef> getRuleGroupRefList() {
+        return ruleGroupRefList;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getRuleString() {
-        return ruleString;
-    }
-
-    public void setRuleString(String ruleString) {
-        this.ruleString = ruleString;
-    }
-
-    public List<RuleGlobal> getRuleGlobals() {
-        return ruleGlobals;
-    }
-
-    public void setRuleGlobals(List<RuleGlobal> ruleGlobals) {
-        this.ruleGlobals = ruleGlobals;
-    }
-
-    public List<RuleInfo> getRuleInfos() {
-        return ruleInfos;
-    }
-
-    public void setRuleInfos(List<RuleInfo> ruleInfos) {
-        this.ruleInfos = ruleInfos;
-    }
-
-    public List<RuleGroup> getRuleGroup() {
-        return ruleGroup;
-    }
-
-    public void setRuleGroup(List<RuleGroup> ruleGroup) {
-        this.ruleGroup = ruleGroup;
+    public void setRuleGroupRefList(List<RuleGroupRef> ruleGroupRefList) {
+        this.ruleGroupRefList = ruleGroupRefList;
     }
 }

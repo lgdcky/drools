@@ -5,18 +5,20 @@ import com.server.MessageCommand.RuleMessage;
 import com.server.command.RuleCommand;
 import com.server.dao.RuleDao;
 import com.server.dao.RuleGroupDao;
+import com.server.dao.RuleGroupRefDao;
 import com.server.dao.RuleHeadDao;
 import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.model.RuleGroup;
+import com.server.model.RuleGroupRef;
 import com.server.model.RuleHead;
 import org.drools.core.io.impl.BaseResource;
+import org.drools.template.model.Rule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,12 +52,13 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
     @Autowired
     private RuleGroupDao ruleGroupDao;
 
+    @Autowired
+    private RuleGroupRefDao ruleGroupRefDao;
+
     @Override
-    public RuleMessage createRule(List<RuleCommand> ruleCommands) {
+    public RuleMessage createRule(RuleHead ruleHead) {
         try {
-            ruleCommands.forEach(ruleCommand -> {
-                ruleLoadManager.saveRule(ruleCommand);
-            });
+                ruleLoadManager.createRule(ruleHead);
             return new RuleMessage("save rule success", null, true, null);
         } catch (Exception e) {
             log.error(e.toString());
@@ -64,11 +67,9 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
     }
 
     @Override
-    public RuleMessage updateRule(List<RuleCommand> ruleCommands) {
+    public RuleMessage updateRule(RuleHead ruleHead) {
         try {
-            ruleCommands.forEach(ruleCommand -> {
-                ruleLoadManager.updateRule(ruleCommand);
-            });
+                ruleLoadManager.updateRule(ruleHead);
             return new RuleMessage("update rule success", null, true, null);
         } catch (Exception e) {
             log.error(e.toString());
@@ -77,31 +78,19 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
     }
 
     @Override
-    public RuleMessage copyRule(List<RuleCommand> ruleCommands) {
-        return this.createRule(ruleCommands);
+    public RuleMessage copyRule(RuleHead ruleHead) {
+        return this.createRule(ruleHead);
     }
 
     @Override
-    public RuleMessage deleteRuleByHead(RuleHead ruleHeadInfo) {
+    public RuleMessage deleteRuleRefByGroup(RuleGroup ruleGroupInfo) {
         try {
-            List<RuleHead> ruleHeadList = ruleLoadManager.findRuleHead(ruleHeadInfo);
-            ruleHeadList.forEach(ruleHead -> {
-                ruleLoadManager.deleteRule(ruleHead.getId());
-            });
-            return new RuleMessage("delete rule by head success", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("delete rule by head failed", e.toString(), false, null);
-        }
-    }
-
-    @Override
-    public RuleMessage deleteRuleByGroup(RuleGroup ruleGroupInfo) {
-        try {
-            List<RuleGroup> ruleGroups = ruleLoadManager.findRuleGroup(ruleGroupInfo);
+            List<RuleGroup> ruleGroups = ruleGroupDao.findRuleGroupByParameter(ruleGroupInfo);
             ruleLoadManager.deleteRuleGroup(ruleGroupInfo);
             ruleGroups.forEach(ruleGroup -> {
-                ruleLoadManager.deleteRule(ruleGroup.getRule_id());
+                RuleGroupRef ruleGroupRef = new RuleGroupRef();
+                ruleGroupRef.setRuleGroup_id(ruleGroup.getId());
+                ruleGroupRefDao.deleteRuleGroupRefByParameter(ruleGroupRef);
             });
             return new RuleMessage("delete rule group success", null, true, null);
         } catch (Exception e) {
@@ -114,7 +103,9 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
     public RuleMessage deleteRuleById(List<Long> ids) {
         try {
             ids.forEach(id -> {
-                ruleLoadManager.deleteRule(id);
+                RuleHead ruleHead = new RuleHead();
+                ruleHead.setId(id);
+                ruleHeadDao.deleteRuleHeadByParameter(ruleHead);
             });
             return new RuleMessage("delete rule by id success", null, true, null);
         } catch (Exception e) {
@@ -145,7 +136,7 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
     @Override
     public RuleMessage createRuleGroup(RuleGroup ruleGroup) {
         try {
-            ruleLoadManager.saveRuleGroup(ruleGroup);
+            ruleLoadManager.createRuleGroup(ruleGroup);
             return new RuleMessage("create rulegroup pass", null, true, null);
         } catch (Exception e) {
             log.error(e.toString());
@@ -172,28 +163,6 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
         } catch (Exception e) {
             log.error(e.toString());
             return new RuleMessage("update rulegroup failed", e.toString(), false, null);
-        }
-    }
-
-    @Override
-    public RuleMessage findRuleGroup(RuleGroup ruleGroup) {
-        try {
-            List<RuleGroup> ruleGroupList = ruleLoadManager.findRuleGroup(ruleGroup);
-            return new RuleMessage("find rule group success", null, true, ruleGroupList);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("find rule group failed", e.toString(), false, null);
-        }
-    }
-
-    @Override
-    public RuleMessage findRuleHead(RuleHead ruleHead) {
-        try {
-            List<RuleHead> ruleHeadList = ruleLoadManager.findRuleHead(ruleHead);
-            return new RuleMessage("find rule head success", null, true, ruleHeadList);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("find rule head failed", e.toString(), false, null);
         }
     }
 
@@ -229,8 +198,8 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
     @Override
     public RuleMessage findRuleByRuleGroupWithPage(RuleGroup ruleGroup,Integer pageNum,Integer size) {
         try {
-            List<RuleGroup> ruleGroups = ruleGroupDao.findRuleGroupByParameterWithPage(convertToMap(ruleGroup,pageNum,size));
-            return new RuleMessage("find rule by group success", null, true, ruleGroups);
+            List<RuleCommand> ruleCommandList = ruleDao.findAllRuleByGroupWithPage(convertToMap(ruleGroup,pageNum,size));
+            return new RuleMessage("find rule by group success", null, true, ruleCommandList);
         } catch (Exception e) {
             log.error(e.toString());
             return new RuleMessage("find rule by group failed", e.toString(), false, null);
@@ -242,5 +211,38 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
         map.put("pageNum",pageNum);
         map.put("size",size);
         return map;
+    }
+
+    @Override
+    public RuleMessage findRuleGroupWithPage(RuleGroup ruleGroup, Integer pageNum, Integer size) {
+        try {
+            List<RuleGroup> ruleGroupList = ruleGroupDao.findRuleGroupByParameterWithPage(convertToMap(ruleGroup,pageNum,size));
+            return new RuleMessage("find rule by group success", null, true, ruleGroupList);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new RuleMessage("find rule by group failed", e.toString(), false, null);
+        }
+    }
+
+    @Override
+    public RuleMessage deleteRuleGroupRef(RuleGroupRef ruleGroupRef) {
+        try {
+            ruleGroupRefDao.deleteRuleGroupRefByParameter(ruleGroupRef);
+            return new RuleMessage("find rule by group success", null, true, null);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new RuleMessage("find rule by group failed", e.toString(), false, null);
+        }
+    }
+
+    @Override
+    public RuleMessage updateRuleGroupRef(RuleGroupRef ruleGroupRef) {
+        try {
+            ruleGroupRefDao.updateRuleGroupRefByParameter(ruleGroupRef);
+            return new RuleMessage("find rule by group success", null, true, null);
+        } catch (Exception e) {
+            log.error(e.toString());
+            return new RuleMessage("find rule by group failed", e.toString(), false, null);
+        }
     }
 }

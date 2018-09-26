@@ -2,6 +2,8 @@ package com.server.tools;
 
 import com.server.command.RuleCommand;
 import com.server.model.RuleGroup;
+import com.server.model.RuleGroupRef;
+import com.server.model.RuleHead;
 import com.server.model.RuleInfo;
 import com.server.utility.template.*;
 import com.server.utility.template.condition.*;
@@ -30,51 +32,89 @@ public final class DroolsConvertToResource {
     public static Map<String, List<BaseResource>> getResourceMap(List<RuleCommand> ruleCommands) {
         Map<String, List<BaseResource>> map = new HashMap<>();
         for (RuleCommand ruleCommand : ruleCommands) {
-            ruleCommand.getRuleGroup().forEach(ruleGroup -> {
-                ByteArrayResource byteArrayResource = null;
-                if (null == ruleCommand.getRuleString()) {
-                    Map<String, String> ruleGlobals = new HashMap<>();
-                    ruleCommand.getRuleGlobals().forEach(ruleGlobal -> {
-                        ruleGlobals.put(ruleGlobal.getGlobalName(), ruleGlobal.getGlobalType());
-                    });
-
-                    HanderTemplate handerTemplate = new HanderTemplate(ruleCommand.getPackageName(), ruleCommand.getRuleName(), ruleGlobals, ruleGroup.getGroupCode(), ruleGroup.getOrderNo());
-                    CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder = handerTemplate.getCeDescrBuilder();
-
-                    List<RuleInfo> ruleInfos = ruleCommand.getRuleInfos();
-                    for (RuleInfo ruleInfo : ruleInfos) {
-                        configRuleInfo(ceDescrBuilder, ruleInfo);
-                    }
-                    StringBuffer op = new StringBuffer();
-                    ruleCommand.getRuleOps().forEach(ruleOp -> {
-                        if (BaseOperationTemplate.SIMPLEOPERATIONTYPE.equals(ruleOp.getType())) {
-                            SimpleOperationTemplate simpleOperationTemplate = new SimpleOperationTemplate();
-                            op.append(simpleOperationTemplate.opTemplate(ruleOp.getObjName(), ruleOp.getAttribute(), ruleOp.getValue()));
-                        }
-                        if (BaseOperationTemplate.STRINGYPE.equals(ruleOp.getType())) {
-                            StringOperationTemplate stringOperationTemplate = new StringOperationTemplate();
-                            op.append(stringOperationTemplate.opTemplate(null, null, ruleOp.getValue()));
-                        }
-                    });
-                    EndTemplate endTemplate = new EndTemplate(ceDescrBuilder, op.toString());
-                    byteArrayResource = endTemplate.returnRuleString();
-                } else {
-                    StringTemplate stringTemplate = new StringTemplate();
-                    byteArrayResource = stringTemplate.setStringTemplate(ruleCommand.getRuleString());
-                }
-                configResourceMap(map, byteArrayResource, ruleGroup);
-            });
-
+            configRule(map, ruleCommand);
         }
+
         return map;
     }
 
-    public static void configResourceMap(Map<String, List<BaseResource>> map, ByteArrayResource byteArrayResource, RuleGroup ruleGroup) {
-        List<BaseResource> list = map.get(ruleGroup.getGroupCode());
+    public static void configRule(Map<String, List<BaseResource>> map, RuleCommand ruleCommand) {
+        ruleCommand.getRuleGroupRefList().forEach(ruleGroupRef -> {
+            configRuleHead(map, ruleCommand, ruleGroupRef);
+        });
+    }
+
+    public static void configRuleHead(Map<String, List<BaseResource>> map, RuleCommand ruleCommand, RuleGroupRef ruleGroupRef) {
+        ruleGroupRef.getRuleHeadList().forEach(ruleHead -> {
+            ByteArrayResource byteArrayResource = null;
+            if (null != ruleHead.getRuleString()) {
+                CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder = configRuleHeaderTemplate(ruleCommand, ruleGroupRef, ruleHead);
+                configRuleInfo(ruleHead, ceDescrBuilder);
+                byteArrayResource = configRuleEndTemplate(ruleHead, ceDescrBuilder);
+            } else {
+                byteArrayResource = configRuleWithRuleString(ruleHead);
+            }
+            configResourceMap(map, byteArrayResource, ruleCommand.getGroupCode());
+        });
+    }
+
+    public static ByteArrayResource configRuleWithRuleString(RuleHead ruleHead) {
+        ByteArrayResource byteArrayResource;
+        StringTemplate stringTemplate = new StringTemplate();
+        byteArrayResource = stringTemplate.setStringTemplate(ruleHead.getRuleString());
+        return byteArrayResource;
+    }
+
+    public static ByteArrayResource configRuleEndTemplate(RuleHead ruleHead, CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder) {
+        ByteArrayResource byteArrayResource;
+        StringBuffer op = configRuleOp(ruleHead);
+        EndTemplate endTemplate = new EndTemplate(ceDescrBuilder, op.toString());
+        byteArrayResource = endTemplate.returnRuleString();
+        return byteArrayResource;
+    }
+
+    public static CEDescrBuilder<RuleDescrBuilder, AndDescr> configRuleHeaderTemplate(RuleCommand ruleCommand, RuleGroupRef ruleGroupRef, RuleHead ruleHead) {
+        Map<String, String> ruleGlobals = configRuleGlobal(ruleHead);
+        HanderTemplate handerTemplate = new HanderTemplate(ruleHead.getPackageName(), ruleHead.getRuleName(), ruleGlobals, ruleCommand.getGroupCode(), String.valueOf(ruleGroupRef.getOrderNo()));
+        return handerTemplate.getCeDescrBuilder();
+    }
+
+    public static StringBuffer configRuleOp(RuleHead ruleHead) {
+        StringBuffer op = new StringBuffer();
+        ruleHead.getRuleOpList().forEach(ruleOp -> {
+            if (BaseOperationTemplate.SIMPLEOPERATIONTYPE.equals(ruleOp.getType())) {
+                SimpleOperationTemplate simpleOperationTemplate = new SimpleOperationTemplate();
+                op.append(simpleOperationTemplate.opTemplate(ruleOp.getObjName(), ruleOp.getAttribute(), ruleOp.getValue()));
+            }
+            if (BaseOperationTemplate.STRINGYPE.equals(ruleOp.getType())) {
+                StringOperationTemplate stringOperationTemplate = new StringOperationTemplate();
+                op.append(stringOperationTemplate.opTemplate(null, null, ruleOp.getValue()));
+            }
+        });
+        return op;
+    }
+
+    public static void configRuleInfo(RuleHead ruleHead, CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder) {
+        List<RuleInfo> ruleInfos = ruleHead.getRuleInfoList();
+        for (RuleInfo ruleInfo : ruleInfos) {
+            configRuleInfo(ceDescrBuilder, ruleInfo);
+        }
+    }
+
+    public static Map<String, String> configRuleGlobal(RuleHead ruleHead) {
+        Map<String, String> ruleGlobals = new HashMap<>();
+        ruleHead.getRuleGlobalList().forEach(ruleGlobal -> {
+            ruleGlobals.put(ruleGlobal.getGlobalName(), ruleGlobal.getGlobalType());
+        });
+        return ruleGlobals;
+    }
+
+    public static void configResourceMap(Map<String, List<BaseResource>> map, ByteArrayResource byteArrayResource, String ruleGroupCode) {
+        List<BaseResource> list = map.get(ruleGroupCode);
         if (null == list) {
             list = new ArrayList<>();
             list.add(byteArrayResource);
-            map.put(ruleGroup.getGroupCode(), list);
+            map.put(ruleGroupCode, list);
         } else {
             list.add(byteArrayResource);
         }

@@ -17,7 +17,7 @@ import java.util.Map;
 @Mapper
 public interface RuleGroupDao {
 
-    void saveRuleGroup(RuleGroup ruleGroup);
+    Long saveRuleGroup(RuleGroup ruleGroup);
 
     List<RuleGroup> findRuleGroupByParameter(RuleGroup ruleGroup);
 

@@ -54,7 +54,7 @@ public class ProcessTest extends TestNgBase {
     @Test
     @Transactional
     public void saveRule() {
-        RuleCommand ruleCommand = new RuleCommand();
+        /*RuleCommand ruleCommand = new RuleCommand();
         ruleCommand.setRuleName("测试");
         ruleCommand.setPackageName(PACKAGENAME);
         ruleCommand.setCreate_Time(new Date());
@@ -223,15 +223,15 @@ public class ProcessTest extends TestNgBase {
         ruleOps.add(ruleOp);
 
         ruleCommand.setRuleOps(ruleOps);
-        ruleLoadManager.saveRule(ruleCommand);
+        ruleLoadManager.saveRule(ruleCommand);*/
     }
 
     @Test
     public void deleteRule() {
-        List<RuleHead> ruleHeads = ruleLoadManager.findAllRuleHead();
+        /*List<RuleHead> ruleHeads = ruleLoadManager.findAllRuleHead();
         ruleHeads.forEach(ruleHead -> {
             ruleLoadManager.deleteRule(ruleHead.getId());
-        });
+        });*/
     }
 
     @Test

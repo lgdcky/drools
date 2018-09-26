@@ -42,11 +42,11 @@ public class SendMessageThreadTest {
 
     private void sendTest(ThreadTool threadTool) throws Exception {
         List<OdoCommand> odoCommands = new ArrayList<OdoCommand>();
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             odoCommands.add(dataBuilder(i));
         }
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<1;i++){
             Thread thread = new Thread(new SendMessageThread(odoCommands,threadTool));
             thread.run();
         }

@@ -7,22 +7,20 @@
         <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
         <result column="ruleName" property="ruleName" jdbcType="VARCHAR"/>
         <result column="ruleString" property="ruleString" jdbcType="VARCHAR"/>
-        <result column="state" property="state" jdbcType="VARCHAR"/>
         <result column="create_Time" property="create_Time" jdbcType="DATE"/>
     </resultMap>
 
     <sql id="RuleHead_Column_List">
-        id, packageName,remarks,ruleName,ruleString,state,create_Time
+        id, packageName,remarks,ruleName,ruleString,create_Time
     </sql>
 
     <insert id="saveRuleHead" flushCache="true" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ruleHead(packageName,remarks,ruleName,ruleString,state,create_Time)
+        INSERT INTO ruleHead(packageName,remarks,ruleName,ruleString,create_Time)
         VALUES (
         #{packageName},
         #{remarks},
         #{ruleName},
         #{ruleString},
-        #{state},
         #{create_Time}
         )
     </insert>
@@ -51,9 +49,6 @@
         <if test="remarks!=null">
             AND remarks = #{remarks}
         </if>
-        <if test="state!=null">
-            AND state = #{state}
-        </if>
     </select>
 
     <select id="findRuleHeadWithPage" parameterType="map" resultMap="RuleHead" flushCache="true">
@@ -74,9 +69,6 @@
         <if test="remarks!=null">
             AND remarks = #{remarks}
         </if>
-        <if test="state!=null">
-            AND state = #{state}
-        </if>
         <if test="pageNum!=null">
             limit #{pageNum},#{size}
         </if>
@@ -96,8 +88,7 @@
         packageName = #{packageName},
         remarks = #{remarks},
         ruleName = #{ruleName},
-        ruleString = #{ruleString},
-        state = #{state}
+        ruleString = #{ruleString}
         WHERE
         id = #{id}
     </update>

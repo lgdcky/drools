@@ -3,22 +3,20 @@
 <mapper namespace="com.server.dao.RuleGroupDao">
     <resultMap id="RuleGroup" type="com.server.model.RuleGroup">
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="rule_id" property="rule_id" jdbcType="BIGINT"/>
         <result column="groupCode" property="groupCode" jdbcType="VARCHAR"/>
-        <result column="orderNo" property="orderNo" jdbcType="TINYINT"/>
         <result column="create_time" property="create_time" jdbcType="DATE"/>
     </resultMap>
 
     <sql id="RuleGroup_Column_List">
-        id, rule_id,groupCode,orderNo,create_time
+        id,groupCode,groupName,description,create_time
     </sql>
 
-    <insert id="saveRuleGroup" flushCache="true">
-        INSERT INTO ruleGroup(rule_id,groupCode,orderNo,create_time)
+    <insert id="saveRuleGroup" flushCache="true" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO ruleGroup(groupCode,groupName,description,create_time)
         VALUES (
-        #{rule_id},
         #{groupCode},
-        #{orderNo},
+        #{groupName},
+        #{description},
         #{create_time}
         )
     </insert>
@@ -31,9 +29,6 @@
         1=1
         <if test="id!=null">
             and id =#{id}
-        </if>
-        <if test="rule_id!=null">
-            and rule_id =#{rule_id}
         </if>
         <if test="groupCode!=null">
             and groupCode =#{groupCode}
@@ -48,9 +43,6 @@
         1=1
         <if test="id!=null">
             and id =#{id}
-        </if>
-        <if test="rule_id!=null">
-            and rule_id =#{rule_id}
         </if>
         <if test="groupCode!=null">
             and groupCode =#{groupCode}
@@ -68,8 +60,8 @@
         <if test="id!=null">
             and id =#{id}
         </if>
-        <if test="rule_id!=null">
-            and rule_id =#{rule_id}
+        <if test="groupCode!=null">
+            and groupCode =#{groupCode}
         </if>
     </delete>
 
@@ -78,14 +70,15 @@
         ruleGroup
         SET
         groupCode = #{groupCode},
-        orderNo = #{orderNo}
+        groupName = #{groupName},
+        description = #{description}
         WHERE
         1=1
         <if test="id!=null">
             and id =#{id}
         </if>
-        <if test="rule_id!=null">
-            and rule_id =#{rule_id}
+        <if test="groupCode!=null">
+            and groupCode =#{groupCode}
         </if>
     </update>
 

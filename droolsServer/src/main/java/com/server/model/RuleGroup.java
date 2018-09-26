@@ -12,19 +12,10 @@ import java.util.Date;
 public class RuleGroup implements Serializable {
 
     private Long id;
-    private Long rule_id;
     private String groupCode;
-    private String orderNo;
+    private String groupName;
     private Date create_time;
-    private Integer state;
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
+    private String description;
 
     public Long getId() {
         return id;
@@ -32,14 +23,6 @@ public class RuleGroup implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getRule_id() {
-        return rule_id;
-    }
-
-    public void setRule_id(Long rule_id) {
-        this.rule_id = rule_id;
     }
 
     public String getGroupCode() {
@@ -50,12 +33,20 @@ public class RuleGroup implements Serializable {
         this.groupCode = groupCode;
     }
 
-    public String getOrderNo() {
-        return orderNo;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Date getCreate_time() {

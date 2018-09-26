@@ -27,18 +27,25 @@ public class RuleOperationManagerImplTest extends TestNgBase {
     public void testFindRuleHeadWithPage() {
         RuleHead ruleHead = new RuleHead();
         ruleHead.setRuleName("测试");
-        RuleMessage ruleMessage = ruleOperationManager.findRuleHeadWithPage(ruleHead,1,0);
+        RuleMessage ruleMessage = ruleOperationManager.findRuleHeadWithPage(ruleHead, 1, 0);
         List<RuleHead> ruleHeadList = ruleMessage.getData();
-        Assert.assertEquals(ruleHeadList.size(),0);
+        Assert.assertEquals(ruleHeadList.size(), 0);
     }
 
     @Test
     public void testFindRuleByRuleGroupWithPage() {
         RuleGroup ruleGroup = new RuleGroup();
-        ruleGroup.setGroupCode("测试一组");
-        RuleMessage ruleMessage = ruleOperationManager.findRuleByRuleGroupWithPage(ruleGroup,0,1);
+        ruleGroup.setGroupCode("testCode");
+        RuleMessage ruleMessage = ruleOperationManager.findRuleByRuleGroupWithPage(ruleGroup, 0, 1);
         List<RuleGroup> ruleGroupList = ruleMessage.getData();
-        Assert.assertEquals(ruleGroupList.size(),1);
+        Assert.assertEquals(ruleGroupList.size(), 1);
 
+    }
+
+    @Test
+    public void testCheckRule() {
+        RuleGroup ruleGroup = new RuleGroup();
+        ruleGroup.setGroupCode("testCode");
+        assertEquals(ruleOperationManager.checkRule(ruleOperationManager.findRuleByRuleGroup(ruleGroup).getData()).getError(), "");
     }
 }

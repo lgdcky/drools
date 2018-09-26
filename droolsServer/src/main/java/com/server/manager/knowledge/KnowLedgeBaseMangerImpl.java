@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static com.server.MessageCommand.KnowledgeMessage.FAILED;
+import static com.server.MessageCommand.KnowledgeMessage.SUCCESS;
 
 /**
  * Created with IntelliJ IDEA.
@@ -66,8 +67,9 @@ public class KnowLedgeBaseMangerImpl implements KnowLedgeBaseManger {
         try {
             droolsServicesBuilderFactory.addRules(knowledgeBuilder, resources, ResourceType.DRL);
             knowledgeBuilder.undo();
+            knowledgeMessage = new KnowledgeMessage("", SUCCESS, null);
         } catch (KnowLedgeBuilderException ruleException) {
-            knowledgeMessage = new KnowledgeMessage(ruleException.toString(), FAILED);
+            knowledgeMessage = new KnowledgeMessage("", FAILED, ruleException.toString());
         } finally {
             internalKnowledgeBase = null;
         }

@@ -35,7 +35,7 @@ public class QueryTest extends TestNgBase {
         createKnowLegdeBase();
 
         List<OdoCommand> odoCommands = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100000; i++) {
             odoCommands.add(retrueOdo1(i));
         }
 

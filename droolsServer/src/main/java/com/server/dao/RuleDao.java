@@ -4,6 +4,7 @@ import com.server.command.RuleCommand;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,5 +20,7 @@ public interface RuleDao {
     List<RuleCommand> findAllRule();
 
     List<RuleCommand> findAllRuleByGroup(String knowledgeBaseName);
+
+    List<RuleCommand> findAllRuleByGroupWithPage(Map<String,Object> map);
 
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.server.dao.RuleGroupRefDao">
+    <resultMap id="RuleGroupRef" type="com.server.model.RuleGroupRef">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result column="rule_id" property="rule_id" jdbcType="BIGINT"/>
+        <result column="ruleGroup_id" property="ruleGroup_id" jdbcType="BIGINT"/>
+        <result column="orderNo" property="orderNo" jdbcType="INTEGER"/>
+        <result column="state" property="state" jdbcType="INTEGER"/>
+        <result column="create_time" property="create_time" jdbcType="DATE"/>
+    </resultMap>
+
+    <sql id="RuleGroupRef_Column_List">
+        id, rule_id,ruleGroup_id,orderNo,state,create_time
+    </sql>
+
+    <insert id="saveRuleGroupRef" flushCache="true">
+        INSERT INTO ruleGroupRef(rule_id,ruleGroup_id,orderNo,state,create_time)
+        VALUES (
+        #{rule_id},
+        #{ruleGroup_id},
+        #{orderNo},
+        #{state},
+        #{create_time}
+        )
+    </insert>
+
+    <delete id="deleteRuleGroupRefByParameter" parameterType="com.server.model.RuleGroupRef">
+        DELETE FROM
+        ruleGroupRef
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+        <if test="ruleGroup_id!=null">
+            and ruleGroup_id =#{ruleGroup_id}
+        </if>
+    </delete>
+
+    <delete id="updateRuleGroupRefByParameter" parameterType="com.server.model.RuleGroupRef">
+        UPDATE
+        ruleGroupRef
+        SET
+        orderNo = #{orderNo},
+        state = #{state}
+        WHERE
+        1=1
+        <if test="id!=null">
+            and id =#{id}
+        </if>
+        <if test="rule_id!=null">
+            and rule_id =#{rule_id}
+        </if>
+        <if test="ruleGroup_id!=null">
+            and ruleGroup_id =#{ruleGroup_id}
+        </if>
+    </delete>
+
+
+</mapper>

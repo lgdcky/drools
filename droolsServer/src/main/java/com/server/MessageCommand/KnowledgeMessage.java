@@ -19,9 +19,12 @@ public class KnowledgeMessage implements Serializable {
 
     private String state;
 
-    public KnowledgeMessage(String message, String state) {
+    private String error;
+
+    public KnowledgeMessage(String message, String state,String error) {
         this.message = message;
         this.state = state;
+        this.error = error;
     }
 
     public String getState() {
@@ -38,5 +41,13 @@ public class KnowledgeMessage implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

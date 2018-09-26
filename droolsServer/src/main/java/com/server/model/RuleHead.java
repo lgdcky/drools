@@ -2,6 +2,7 @@ package com.server.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,9 +22,13 @@ public class RuleHead implements Serializable {
 
     private String remarks;
 
-    private Integer state;
-
     private String ruleString;
+
+    private List<RuleInfo> ruleInfoList;
+
+    private List<RuleGlobal> ruleGlobalList;
+
+    private List<RuleOp> ruleOpList;
 
     public Long getId() {
         return id;
@@ -73,11 +78,27 @@ public class RuleHead implements Serializable {
         this.ruleString = ruleString;
     }
 
-    public Integer getState() {
-        return state;
+    public List<RuleInfo> getRuleInfoList() {
+        return ruleInfoList;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
+    public void setRuleInfoList(List<RuleInfo> ruleInfoList) {
+        this.ruleInfoList = ruleInfoList;
+    }
+
+    public List<RuleOp> getRuleOpList() {
+        return ruleOpList;
+    }
+
+    public void setRuleOpList(List<RuleOp> ruleOpList) {
+        this.ruleOpList = ruleOpList;
+    }
+
+    public List<RuleGlobal> getRuleGlobalList() {
+        return ruleGlobalList;
+    }
+
+    public void setRuleGlobalList(List<RuleGlobal> ruleGlobalList) {
+        this.ruleGlobalList = ruleGlobalList;
     }
 }

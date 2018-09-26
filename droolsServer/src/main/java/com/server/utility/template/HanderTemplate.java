@@ -33,14 +33,14 @@ public class HanderTemplate {
 
     /**
      * 设置规则头信息
-     *
      * @param packageName
      * @param ruleName
+     * @param group
+     * @param orderNo  越大执行越靠前
      * @return
      */
     public RuleDescrBuilder addRuleInfo(String packageName, String ruleName, String group, String orderNo) {
-        return packageDescrBuilder.name(packageName).newRule().name(ruleName);
-        /*return packageDescrBuilder.name(packageName).newRule().name(ruleName).attribute("agenda-group", "\"" + group + "\"").attribute("salience", orderNo).attribute("dialect", "java").attribute("no-loop", "true");*/
+        return packageDescrBuilder.name(packageName).newRule().name(ruleName).attribute("agenda-group", "\"" + group + "\"").attribute("auto-focus", "").attribute("salience", orderNo).attribute("dialect", "java").attribute("no-loop", "true");
     }
 
 

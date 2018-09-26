@@ -39,6 +39,7 @@ public class DbTest extends TestNgBase {
 
     @Autowired
     private RuleDao ruleDao;
+/*
 
     @Test
     @Transactional
@@ -97,10 +98,12 @@ public class DbTest extends TestNgBase {
     @Test
     @Transactional
     public void testFindRuleGroup(){
-        /*RuleGroup ruleGroup = new RuleGroup();
+        */
+/*RuleGroup ruleGroup = new RuleGroup();
         ruleGroup.setRule_id(12l);
         ruleGroup = ruleGroupDao.findRuleGroupByParameter(ruleGroup);
-        System.out.println();*/
+        System.out.println();*//*
+
     }
 
     @Test
@@ -278,5 +281,6 @@ public class DbTest extends TestNgBase {
     public void getRule(){
         ruleLoadManager.loadRule("cc12");
     }
+*/
 
 }
