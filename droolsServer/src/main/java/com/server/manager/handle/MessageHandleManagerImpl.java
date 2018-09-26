@@ -50,13 +50,18 @@ public class MessageHandleManagerImpl implements MessageHandleManager {
     }
 
     public static byte[] doFilter(Object[] data, String type, String group, QueryManager queryManager, Object[] paramGroup, Object[] paramType) throws IOException {
-        List<Object> dataList = Stream.of(data).collect(Collectors.toList());
-        queryManager.queryCommandWithStatelessKieSessionAsList(group, dataList);
         Map<String, Object[]> map = new HashMap<String, Object[]>();
         map.put("paramGroup", paramGroup);
         map.put("paramType", paramType);
-        map.put("data", dataList.toArray());
-        return compresss(TypeConvertTools.objToBytesByStream(map));
+        List<Object> dataList = Stream.of(data).collect(Collectors.toList());
+        try {
+            queryManager.queryCommandWithStatelessKieSessionAsList(group, dataList);
+            map.put("data", dataList.toArray());
+            return compresss(TypeConvertTools.objToBytesByStream(map));
+        } catch (Exception e) {
+            logger.error(e.toString());
+            return compresss(TypeConvertTools.objToBytesByStream(map));
+        }
     }
 
 
