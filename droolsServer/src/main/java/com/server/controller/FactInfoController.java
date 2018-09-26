@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static com.server.tools.TypeConvertTools.objectListToJson;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
@@ -32,8 +34,8 @@ public class FactInfoController extends BaseController {
      */
     @GetMapping(path = "/factList")
     @ResponseBody
-    public String factList() {
-        return factManager.getFactClassDescriptionInfo(PATH);
+    public String factList() throws Exception {
+        return objectListToJson(factManager.getFactClassDescriptionInfo(PATH));
     }
 
 }

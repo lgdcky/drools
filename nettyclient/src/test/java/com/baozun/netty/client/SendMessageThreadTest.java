@@ -78,7 +78,7 @@ public class SendMessageThreadTest {
     public void send(List<OdoCommand> odoCommands) {
         RuleCommand<OdoCommand> ruleCommand = new RuleCommand<OdoCommand>();
         ruleCommand.setFactList(odoCommands);
-        ruleCommand.setGroup("测试一组");
+        ruleCommand.setGroup("testCode");
         ruleCommand.setType("odoCommandFact");
 
         SendMessage sendMessage = new SendMessage();

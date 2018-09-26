@@ -58,7 +58,7 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
     @Override
     public RuleMessage createRule(RuleHead ruleHead) {
         try {
-                ruleLoadManager.createRule(ruleHead);
+            ruleLoadManager.createRule(ruleHead);
             return new RuleMessage("save rule success", null, true, null);
         } catch (Exception e) {
             log.error(e.toString());
@@ -68,13 +68,8 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
 
     @Override
     public RuleMessage updateRule(RuleHead ruleHead) {
-        try {
-                ruleLoadManager.updateRule(ruleHead);
-            return new RuleMessage("update rule success", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("update rule failed", e.toString(), false, null);
-        }
+        ruleLoadManager.updateRule(ruleHead);
+        return new RuleMessage("update rule success", null, true, null);
     }
 
     @Override
@@ -84,165 +79,120 @@ public class RuleOperationManagerImpl implements RuleOperationManager {
 
     @Override
     public RuleMessage deleteRuleRefByGroup(RuleGroup ruleGroupInfo) {
-        try {
-            List<RuleGroup> ruleGroups = ruleGroupDao.findRuleGroupByParameter(ruleGroupInfo);
-            ruleLoadManager.deleteRuleGroup(ruleGroupInfo);
-            ruleGroups.forEach(ruleGroup -> {
-                RuleGroupRef ruleGroupRef = new RuleGroupRef();
-                ruleGroupRef.setRuleGroup_id(ruleGroup.getId());
-                ruleGroupRefDao.deleteRuleGroupRefByParameter(ruleGroupRef);
-            });
-            return new RuleMessage("delete rule group success", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("delete rule group failed", e.toString(), false, null);
-        }
+        List<RuleGroup> ruleGroups = ruleGroupDao.findRuleGroupByParameter(ruleGroupInfo);
+        ruleLoadManager.deleteRuleGroup(ruleGroupInfo);
+        ruleGroups.forEach(ruleGroup -> {
+            RuleGroupRef ruleGroupRef = new RuleGroupRef();
+            ruleGroupRef.setRuleGroup_id(ruleGroup.getId());
+            ruleGroupRefDao.deleteRuleGroupRefByParameter(ruleGroupRef);
+        });
+        return new RuleMessage("delete rule group success", null, true, null);
     }
 
     @Override
     public RuleMessage deleteRuleById(List<Long> ids) {
-        try {
-            ids.forEach(id -> {
-                RuleHead ruleHead = new RuleHead();
-                ruleHead.setId(id);
-                ruleHeadDao.deleteRuleHeadByParameter(ruleHead);
-            });
-            return new RuleMessage("delete rule by id success", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("delete rule by id failed", e.toString(), false, null);
-        }
+        ids.forEach(id -> {
+            RuleHead ruleHead = new RuleHead();
+            ruleHead.setId(id);
+            ruleHeadDao.deleteRuleHeadByParameter(ruleHead);
+        });
+        return new RuleMessage("delete rule by id success", null, true, null);
     }
 
     @Override
     public RuleMessage checkRule(List<RuleCommand> ruleCommands) {
-        try {
-            Map<String, List<BaseResource>> map = getResourceMap(ruleCommands);
+        Map<String, List<BaseResource>> map = getResourceMap(ruleCommands);
 
-            KnowledgeMessage error = null;
-            for (String group : map.keySet()) {
-                error = knowLedgeBaseManger.testRule(map.get(group));
-                if (null != error.getMessage()) {
-                    return new RuleMessage("check rule failed", error.getMessage(), false, null);
-                }
+        KnowledgeMessage error = null;
+        for (String group : map.keySet()) {
+            error = knowLedgeBaseManger.testRule(map.get(group));
+            if (null != error.getMessage()) {
+                return new RuleMessage("check rule failed", error.getMessage(), false, null);
             }
-            return new RuleMessage("check rule pass", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("delete rule failed", e.toString(), false, null);
         }
+        return new RuleMessage("check rule pass", null, true, null);
     }
 
     @Override
     public RuleMessage createRuleGroup(RuleGroup ruleGroup) {
-        try {
-            ruleLoadManager.createRuleGroup(ruleGroup);
-            return new RuleMessage("create rulegroup pass", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("create rulegroup failed", e.toString(), false, null);
-        }
+        ruleLoadManager.createRuleGroup(ruleGroup);
+        return new RuleMessage("create rulegroup pass", null, true, null);
     }
 
     @Override
     public RuleMessage deleteRuleGroup(RuleGroup ruleGroupInfo) {
-        try {
-            ruleLoadManager.deleteRuleGroup(ruleGroupInfo);
-            return new RuleMessage("delete rule group success", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("delete rule group failed", e.toString(), false, null);
-        }
+        ruleLoadManager.deleteRuleGroup(ruleGroupInfo);
+        return new RuleMessage("delete rule group success", null, true, null);
     }
 
     @Override
     public RuleMessage updateRuleGroup(RuleGroup ruleGroup) {
-        try {
-            ruleLoadManager.updateRuleGroup(ruleGroup);
-            return new RuleMessage("update rulegroup pass", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("update rulegroup failed", e.toString(), false, null);
-        }
+        ruleLoadManager.updateRuleGroup(ruleGroup);
+        return new RuleMessage("update rulegroup pass", null, true, null);
     }
 
     @Override
     public RuleMessage findRuleByRuleGroup(RuleGroup ruleGroup) {
-        try {
-            List<RuleCommand> ruleCommands = ruleDao.findAllRuleByGroup(ruleGroup.getGroupCode());
-            return new RuleMessage("find rule by group success", null, true, ruleCommands);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("find rule by group failed", e.toString(), false, null);
-        }
+        List<RuleCommand> ruleCommands = ruleDao.findAllRuleByGroup(ruleGroup.getGroupCode());
+        return new RuleMessage("find rule by group success", null, true, ruleCommands);
     }
 
     @Override
-    public RuleMessage findRuleHeadWithPage(RuleHead ruleHead,Integer pageNum,Integer size) {
+    public RuleMessage findRuleHeadWithPage(RuleHead ruleHead, Integer pageNum, Integer size) {
+        List<RuleHead> ruleHeadList = null;
         try {
-            List<RuleHead> ruleHeadList = ruleHeadDao.findRuleHeadWithPage(convertToMap(ruleHead,pageNum,size));
-            return new RuleMessage("find rule head success", null, true, ruleHeadList);
+            return new RuleMessage("find rule head success", null, true, ruleHeadDao.findRuleHeadWithPage(convertToMap(ruleHead, pageNum, size)));
         } catch (Exception e) {
             log.error(e.toString());
-            return new RuleMessage("find rule head failed", e.toString(), false, null);
+            return new RuleMessage("find rule head failed", null, false, null);
         }
     }
 
-    private static final Map<String,Object> convertToMap(RuleHead ruleHead,Integer pageNum,Integer size) throws Exception {
-        Map<String,Object> map = objectToMap(ruleHead);
-        map.put("pageNum",pageNum);
-        map.put("size",size);
+    private static final Map<String, Object> convertToMap(RuleHead ruleHead, Integer pageNum, Integer size) throws Exception {
+        Map<String, Object> map = objectToMap(ruleHead);
+        map.put("pageNum", pageNum);
+        map.put("size", size);
         return map;
     }
 
     @Override
-    public RuleMessage findRuleByRuleGroupWithPage(RuleGroup ruleGroup,Integer pageNum,Integer size) {
+    public RuleMessage findRuleByRuleGroupWithPage(RuleGroup ruleGroup, Integer pageNum, Integer size) {
+        List<RuleCommand> ruleCommandList = null;
         try {
-            List<RuleCommand> ruleCommandList = ruleDao.findAllRuleByGroupWithPage(convertToMap(ruleGroup,pageNum,size));
-            return new RuleMessage("find rule by group success", null, true, ruleCommandList);
+            return new RuleMessage("find rule by group success", null, true, ruleDao.findAllRuleByGroupWithPage(convertToMap(ruleGroup, pageNum, size)));
         } catch (Exception e) {
             log.error(e.toString());
-            return new RuleMessage("find rule by group failed", e.toString(), false, null);
+            return new RuleMessage("find rule by group failed", null, false, null);
         }
+
     }
 
-    private static final Map<String,Object> convertToMap(RuleGroup ruleGroup,Integer pageNum,Integer size) throws Exception {
-        Map<String,Object> map = objectToMap(ruleGroup);
-        map.put("pageNum",pageNum);
-        map.put("size",size);
+    private static final Map<String, Object> convertToMap(RuleGroup ruleGroup, Integer pageNum, Integer size) throws Exception {
+        Map<String, Object> map = objectToMap(ruleGroup);
+        map.put("pageNum", pageNum);
+        map.put("size", size);
         return map;
     }
 
     @Override
     public RuleMessage findRuleGroupWithPage(RuleGroup ruleGroup, Integer pageNum, Integer size) {
+        List<RuleGroup> ruleGroupList = null;
         try {
-            List<RuleGroup> ruleGroupList = ruleGroupDao.findRuleGroupByParameterWithPage(convertToMap(ruleGroup,pageNum,size));
-            return new RuleMessage("find rule by group success", null, true, ruleGroupList);
+            return new RuleMessage("find rule by group success", null, true, ruleGroupDao.findRuleGroupByParameterWithPage(convertToMap(ruleGroup, pageNum, size)));
         } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("find rule by group failed", e.toString(), false, null);
+            return new RuleMessage("find rule by group failed", null, false, null);
         }
     }
 
     @Override
     public RuleMessage deleteRuleGroupRef(RuleGroupRef ruleGroupRef) {
-        try {
-            ruleGroupRefDao.deleteRuleGroupRefByParameter(ruleGroupRef);
-            return new RuleMessage("find rule by group success", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("find rule by group failed", e.toString(), false, null);
-        }
+        ruleGroupRefDao.deleteRuleGroupRefByParameter(ruleGroupRef);
+        return new RuleMessage("find rule by group success", null, true, null);
     }
 
     @Override
     public RuleMessage updateRuleGroupRef(RuleGroupRef ruleGroupRef) {
-        try {
-            ruleGroupRefDao.updateRuleGroupRefByParameter(ruleGroupRef);
-            return new RuleMessage("find rule by group success", null, true, null);
-        } catch (Exception e) {
-            log.error(e.toString());
-            return new RuleMessage("find rule by group failed", e.toString(), false, null);
-        }
+        ruleGroupRefDao.updateRuleGroupRefByParameter(ruleGroupRef);
+        return new RuleMessage("find rule by group success", null, true, null);
     }
 }

@@ -57,7 +57,7 @@ public class KnowledgeBaseLib {
             return this.internalKnowledgeBaseMap.get(knowLedgeBaseName);
         }else{
             List<BaseResource> resourceList = ruleLoadManager.loadRule(knowLedgeBaseName);
-            if(null==resourceList && resourceList.isEmpty()){
+            if(null==resourceList || resourceList.size()<1){
                 logger.warn(NORULEEXCEPTION);
                 throw new KnowLedgeBuilderException(NORULEEXCEPTION);
             }

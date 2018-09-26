@@ -1,6 +1,9 @@
 package com.server.MessageCommand;
 
+import org.apache.poi.ss.formula.functions.T;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -8,7 +11,11 @@ import java.io.Serializable;
  * Date: 9/17/18
  * Time: 3:19 PM
  */
-public class FactMessage implements Serializable {
+public class FactMessage<T> implements Serializable {
+
+    public static final String SUCCESS = "success";
+
+    public static final String FAILED = "failed";
 
     private String state;
 
@@ -18,11 +25,14 @@ public class FactMessage implements Serializable {
 
     private boolean isBusiness;
 
-    public FactMessage(String state, String error, String message, boolean isBusiness) {
+    private List<T> data;
+
+    public FactMessage(String state, String error, String message, boolean isBusiness, List<T> data) {
         this.state = state;
         this.error = error;
         this.message = message;
         this.isBusiness = isBusiness;
+        this.data = data;
     }
 
     public boolean isBusiness() {
@@ -55,5 +65,13 @@ public class FactMessage implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<T> getData() {
+        return data;
+    }
+
+    public void setData(List<T> data) {
+        this.data = data;
     }
 }

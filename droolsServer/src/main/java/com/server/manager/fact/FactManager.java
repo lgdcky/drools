@@ -1,5 +1,7 @@
 package com.server.manager.fact;
 
+import com.server.MessageCommand.FactMessage;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
@@ -8,6 +10,6 @@ package com.server.manager.fact;
  */
 public interface FactManager {
 
-    public String getFactClassDescriptionInfo(String path);
+    public FactMessage getFactClassDescriptionInfo(String path) throws Exception;
 
 }

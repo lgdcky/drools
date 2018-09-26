@@ -1,6 +1,6 @@
 package com.server.config;
 
-import com.server.tools.KnowLedgeBaseHandler;
+import com.server.aspect.KnowLedgeBaseHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;

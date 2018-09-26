@@ -1,11 +1,9 @@
 package com.server.controller;
 
 import com.server.MessageCommand.KnowledgeMessage;
-import com.server.command.RuleCommand;
 import com.server.manager.knowledge.KnowLedgeBaseManger;
 import com.server.manager.rule.RuleLoadManager;
 import com.server.model.RuleGroup;
-import org.drools.core.io.impl.BaseResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import static com.server.MessageCommand.KnowledgeMessage.FAILED;
 import static com.server.MessageCommand.KnowledgeMessage.SUCCESS;
@@ -48,19 +44,14 @@ public class KnowLedgeBaseController extends BaseController {
      */
     @GetMapping(path = "/reLoadAllRule")
     @ResponseBody
-    public String reLoadAllRule() {
+    public String reLoadAllRule() throws IOException, ClassNotFoundException {
         try {
             knowLedgeBaseManger.reloadRules();
             return objectListToJson(new KnowledgeMessage("reLoadAllRule success", SUCCESS, null));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new KnowledgeMessage("return result error", FAILED, e.getMessage()));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new KnowledgeMessage("return result error", FAILED, e.getMessage()));
         }
-        return null;
     }
 
     /**
@@ -70,19 +61,14 @@ public class KnowLedgeBaseController extends BaseController {
      */
     @GetMapping(path = "/reLoadRuleByRuleGroup")
     @ResponseBody
-    public String reLoadRuleByRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) {
+    public String reLoadRuleByRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) throws IOException, ClassNotFoundException {
         try {
             knowLedgeBaseManger.reloadRule(ruleGroup.getGroupCode());
             return objectListToJson(new KnowledgeMessage("reLoadRuleByRuleGroup success", SUCCESS, null));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
                 return objectListToJson(new KnowledgeMessage("return result error", FAILED, e.getMessage()));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
         }
-        return null;
     }
 
 }

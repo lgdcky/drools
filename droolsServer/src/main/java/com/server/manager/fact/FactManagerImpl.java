@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static com.server.tools.TypeConvertTools.objectListToJson;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
@@ -26,18 +24,12 @@ public class FactManagerImpl implements FactManager {
     private FactLoader factLoader;
 
     @Override
-    public String getFactClassDescriptionInfo(String path) {
+    public FactMessage getFactClassDescriptionInfo(String path) {
         factLoader.setClassPath(path);
         try {
-            return objectListToJson(factLoader.entityInfo());
-        } catch (ClassNotFoundException | IOException e) {
-            try {
-                logger.error(e.toString());
-                return objectListToJson(new FactMessage(null, e.toString(), "Internal Server Error", false));
-            } catch (ClassNotFoundException | IOException ex) {
-                logger.error(ex.toString());
-            }
+            return new FactMessage(FactMessage.SUCCESS, null, "Internal Server Error", false, factLoader.entityInfo());
+        } catch (IOException e) {
+            return new FactMessage(FactMessage.FAILED, null, null, false, null);
         }
-        return null;
     }
 }

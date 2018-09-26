@@ -43,20 +43,15 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/checkRule")
     @ResponseBody
-    public String checkRule(@RequestParam("ruleCommand") RuleCommand ruleCommand) {
+    public String checkRule(@RequestParam("ruleCommand") RuleCommand ruleCommand) throws IOException, ClassNotFoundException {
         List<RuleCommand> ruleCommandList = new ArrayList<>();
         ruleCommandList.add(ruleCommand);
         try {
             return objectListToJson(ruleOperationManager.checkRule(ruleCommandList));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return result error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return result error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -66,18 +61,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/saveRule")
     @ResponseBody
-    public String saveRule(@RequestParam("ruleHead") RuleHead ruleHead) {
+    public String saveRule(@RequestParam("ruleHead") RuleHead ruleHead) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.createRule(ruleHead));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return save rule error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return save rule error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -87,18 +77,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/saveRuleGroup")
     @ResponseBody
-    public String saveRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) {
+    public String saveRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.createRuleGroup(ruleGroup));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return save rule group error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return save rule group error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -108,18 +93,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/updateRuleGroup")
     @ResponseBody
-    public String updateRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) {
+    public String updateRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.updateRuleGroup(ruleGroup));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return update rule group error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return update rule group error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -129,18 +109,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/findRuleGroup")
     @ResponseBody
-    public String findRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup, @RequestParam("pageNum") Integer pageNum, @RequestParam("size") Integer size) {
+    public String findRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup, @RequestParam("pageNum") Integer pageNum, @RequestParam("size") Integer size) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.findRuleGroupWithPage(ruleGroup, pageNum, size));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return find rule group error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return find rule group error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -150,18 +125,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/findRule")
     @ResponseBody
-    public String findRule(@RequestParam("ruleGroup") RuleGroup ruleGroup, @RequestParam("pageNum") Integer pageNum, @RequestParam("size") Integer size) {
+    public String findRule(@RequestParam("ruleGroup") RuleGroup ruleGroup, @RequestParam("pageNum") Integer pageNum, @RequestParam("size") Integer size) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.findRuleByRuleGroupWithPage(ruleGroup, pageNum, size));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return find rule error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return find rule error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -171,18 +141,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/updateRule")
     @ResponseBody
-    public String updateRule(@RequestParam("ruleHead") RuleHead ruleHead) {
+    public String updateRule(@RequestParam("ruleHead") RuleHead ruleHead) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.updateRule(ruleHead));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return update rule error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return update rule error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -192,18 +157,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/updateRuleGroupRef")
     @ResponseBody
-    public String updateRuleGroupRef(@RequestParam("ruleGroupRef") RuleGroupRef ruleGroupRef) {
+    public String updateRuleGroupRef(@RequestParam("ruleGroupRef") RuleGroupRef ruleGroupRef) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.updateRuleGroupRef(ruleGroupRef));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return updateRuleGroupRef error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return updateRuleGroupRef error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -213,18 +173,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/deleteRuleGroupRef")
     @ResponseBody
-    public String deleteRuleGroupRef(@RequestParam("ruleGroupRef") RuleGroupRef ruleGroupRef) {
+    public String deleteRuleGroupRef(@RequestParam("ruleGroupRef") RuleGroupRef ruleGroupRef) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.deleteRuleGroupRef(ruleGroupRef));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return deleteRuleGroupRef error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return deleteRuleGroupRef error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -234,18 +189,13 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/deleteRuleById")
     @ResponseBody
-    public String deleteRuleById(@RequestParam("ids") List<Long> ruleIds) {
+    public String deleteRuleById(@RequestParam("ids") List<Long> ruleIds) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.deleteRuleById(ruleIds));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return deleteRuleById error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return deleteRuleById error", e.getMessage(), false, null));
         }
-        return null;
     }
 
     /**
@@ -255,17 +205,12 @@ public class RuleController extends BaseController {
      */
     @GetMapping(path = "/deleteRuleGroup")
     @ResponseBody
-    public String deleteRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) {
+    public String deleteRuleGroup(@RequestParam("ruleGroup") RuleGroup ruleGroup) throws IOException, ClassNotFoundException {
         try {
             return objectListToJson(ruleOperationManager.deleteRuleGroup(ruleGroup));
         } catch (IOException | ClassNotFoundException e) {
             log.error(e.toString());
-            try {
-                return objectListToJson(new RuleMessage("return deleteRuleGroup error", e.getMessage(), false, null));
-            } catch (IOException | ClassNotFoundException ex) {
-                log.error(e.toString());
-            }
+            return objectListToJson(new RuleMessage("return deleteRuleGroup error", e.getMessage(), false, null));
         }
-        return null;
     }
 }

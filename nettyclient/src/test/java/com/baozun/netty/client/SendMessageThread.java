@@ -47,7 +47,7 @@ public class SendMessageThread implements Runnable {
     public void run() {
         RuleCommand<OdoCommand> ruleCommand = new RuleCommand<OdoCommand>();
         ruleCommand.setFactList(odoCommands);
-        ruleCommand.setGroup("测试一组");
+        ruleCommand.setGroup("testCode");
         ruleCommand.setType("odoCommandFact");
 
         SendMessage sendMessage = new SendMessage();
