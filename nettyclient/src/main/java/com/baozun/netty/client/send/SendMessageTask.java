@@ -55,7 +55,6 @@ public class SendMessageTask extends CallableThreadTool<ChannelFuture> {
         boolean flag = true;
         int count = 0;
         while (!channel.isConnected()) {
-            logger.info("waitting ...");
             if (50 < count++) {
                 throw new RuntimeException("connection wait time too long!");
             }

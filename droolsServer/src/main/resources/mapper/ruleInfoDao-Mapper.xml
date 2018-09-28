@@ -86,4 +86,5 @@
             and rule_id =#{rule_id}
         </if>
     </update>
+
 </mapper>

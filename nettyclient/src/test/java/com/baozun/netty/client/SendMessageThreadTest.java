@@ -38,6 +38,9 @@ public class SendMessageThreadTest {
         ThreadTool threadTool = new ThreadTool();
         SendMessageThreadTest sendMessageThreadTest = new SendMessageThreadTest();
         sendMessageThreadTest.sendTest(threadTool);
+
+        Thread.sleep(100000l);
+        sendMessageThreadTest.sendTest(threadTool);
     }
 
     private void sendTest(ThreadTool threadTool) throws Exception {
@@ -46,7 +49,7 @@ public class SendMessageThreadTest {
             odoCommands.add(dataBuilder(i));
         }
 
-        for(int i=0;i<1;i++){
+        for(int i=0;i<10;i++){
             Thread thread = new Thread(new SendMessageThread(odoCommands,threadTool));
             thread.run();
         }

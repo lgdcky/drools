@@ -116,7 +116,7 @@ public class RPCServerHandler extends SimpleChannelHandler {
     @Override
     public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
         logger.debug("the new connection was Disconnected");
-        super.channelDisconnected(ctx, e);
+        //super.channelDisconnected(ctx, e);
     }
 
     /**

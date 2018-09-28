@@ -1,10 +1,13 @@
 package com.server.dao;
 
 
+import com.server.command.RuleCommand;
 import com.server.model.RuleInfo;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.

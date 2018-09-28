@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.ConnectException;
+import java.nio.channels.ClosedChannelException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,7 +23,9 @@ public class ExceptionHandler {
         if (e.getCause() instanceof ConnectException) {
             logger.warn("channel will be close!");
             ctx.getChannel().close();
-        } else {
+        } else if(e.getCause() instanceof ClosedChannelException){
+            logger.warn("channel was closed!");
+        }else{
             logger.warn("unknow failed!");
         }
     }

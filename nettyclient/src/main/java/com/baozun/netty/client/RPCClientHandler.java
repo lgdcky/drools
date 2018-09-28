@@ -46,10 +46,10 @@ public class RPCClientHandler extends SimpleChannelHandler {
             ex.printStackTrace();
         }
         if(message instanceof String){
-            System.out.println(message);
             if (HEARTBEATSTART.equals(message)) {
                 convertStringAndSend(ctx, e, HEARTBEATEND);
             }
+            //ctx.getPipeline().getChannel().disconnect();
         }else{
             messageHandleManager.messageHandle(message);
         }
@@ -76,7 +76,7 @@ public class RPCClientHandler extends SimpleChannelHandler {
      */
     @Override
     public void childChannelClosed(ChannelHandlerContext ctx, ChildChannelStateEvent e) throws Exception {
-        System.out.println("childChannel is closed!");
+        logger.info("childChannel is closed!");
         super.childChannelClosed(ctx, e);
     }
 
@@ -90,7 +90,6 @@ public class RPCClientHandler extends SimpleChannelHandler {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) throws Exception {
         logger.error(e.toString());
-        super.exceptionCaught(ctx, e);
         ExceptionHandler.exceptionHandle(ctx, e);
     }
 

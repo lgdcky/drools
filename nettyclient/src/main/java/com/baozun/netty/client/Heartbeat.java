@@ -77,6 +77,7 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
                 ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(TypeConvertTools.objToBytesByStream(HEARTBEATSTART))));
                 ctx.getChannel().write(bufferByte);
                 bufferByte.clear();
+                ctx.getPipeline().getChannel().disconnect();
             }
             if (((IdleStateEvent) e).getState() == IdleState.READER_IDLE) {
                 logger.warn("Reader Time out,load data failed!");
