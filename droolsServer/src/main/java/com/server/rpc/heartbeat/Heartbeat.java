@@ -26,6 +26,8 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
 
     private int count = 0;
 
+    private int connectionTime = 0;
+
     public static final String HEARTBEATSTART = "start";
 
     public static final String HEARTBEATEND = "end";
@@ -69,8 +71,9 @@ public class Heartbeat extends IdleStateAwareChannelHandler {
     public void handleUpstream(ChannelHandlerContext ctx, ChannelEvent e) throws Exception {
         if (e instanceof IdleStateEvent) {
             if (((IdleStateEvent) e).getState() == IdleState.ALL_IDLE) {
+                connectionTime++;
                 logger.warn("will check client state!");
-                ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(TypeConvertTools.objToBytesByStream(HEARTBEATSTART))));
+                ChannelBuffer bufferByte = new ByteBufferBackedChannelBuffer(ByteBuffer.wrap(compresss(TypeConvertTools.objToBytesByStream(HEARTBEATSTART + "_" + connectionTime))));
                 ctx.getChannel().write(bufferByte);
                 bufferByte.clear();
             }

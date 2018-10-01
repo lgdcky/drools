@@ -49,7 +49,7 @@ public class SendMessageThreadTest {
             odoCommands.add(dataBuilder(i));
         }
 
-        for(int i=0;i<10;i++){
+        for(int i=0;i<1;i++){
             Thread thread = new Thread(new SendMessageThread(odoCommands,threadTool));
             thread.run();
         }

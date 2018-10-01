@@ -37,6 +37,8 @@ public class RPCServerHandler extends SimpleChannelHandler {
 
     private static final String RECEIVED = "received";
 
+    private static final String ERROR = "error message";
+
     private static final Integer BUFFERSIZE = 3 * 1024 * 1024;
 
     RPCServerHandler(MessageHandleManager messageHandleManager) {
@@ -54,10 +56,16 @@ public class RPCServerHandler extends SimpleChannelHandler {
     public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) throws Exception {
         Object message = convertBytes(ctx, e);
         if (message instanceof String) {
-            if (HEARTBEATSTART.equals(message)) {
-                convertStringAndSend(ctx, e, HEARTBEATEND);
+            String rec = (String) message;
+            if (rec.contains(HEARTBEATSTART)) {
+                if (Integer.parseInt(rec.split("_")[1]) > 10) {
+                    logger.info("childChannel will be closed!");
+                    ctx.getPipeline().getChannel().disconnect();
+                } else {
+                    convertStringAndSend(ctx, e, HEARTBEATEND);
+                }
             } else {
-                return;
+                convertStringAndSend(ctx, e, ERROR);
             }
         } else {
             byte[] bytes = messageHandleManager.messageHandle((Map) message);

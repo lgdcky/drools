@@ -7,8 +7,6 @@ import org.jboss.netty.channel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 import static com.baozun.netty.client.Heartbeat.HEARTBEATEND;
 import static com.baozun.netty.client.Heartbeat.HEARTBEATSTART;
 import static com.baozun.netty.client.tools.NettyMessageTool.convertBytes;
@@ -25,6 +23,8 @@ public class RPCClientHandler extends SimpleChannelHandler {
     private static Logger logger = LoggerFactory.getLogger(RPCClientHandler.class);
 
     private MessageHandleManager messageHandleManager;
+
+    private static final String ERROR = "error message";
 
     RPCClientHandler(MessageHandleManager messageHandleManager) {
         this.messageHandleManager = messageHandleManager;
@@ -45,12 +45,19 @@ public class RPCClientHandler extends SimpleChannelHandler {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if(message instanceof String){
-            if (HEARTBEATSTART.equals(message)) {
-                convertStringAndSend(ctx, e, HEARTBEATEND);
+        if (message instanceof String) {
+            String rec = (String) message;
+            if (rec.contains(HEARTBEATSTART)) {
+                if (Integer.parseInt(rec.split("_")[1]) > 10) {
+                    logger.info("childChannel will be closed!");
+                    ctx.getPipeline().getChannel().disconnect();
+                } else {
+                    convertStringAndSend(ctx, e, HEARTBEATEND);
+                }
+            } else {
+                convertStringAndSend(ctx, e, ERROR);
             }
-            //ctx.getPipeline().getChannel().disconnect();
-        }else{
+        } else {
             messageHandleManager.messageHandle(message);
         }
     }
