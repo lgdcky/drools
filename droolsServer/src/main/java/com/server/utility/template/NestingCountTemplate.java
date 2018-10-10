@@ -11,6 +11,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.server.tools.DroolsConvertToResource.checkRuleId;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
@@ -76,7 +78,10 @@ public class NestingCountTemplate {
     public DescrBuilder setNestingCountTemplate() {
         CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder = ((CEDescrBuilder<RuleDescrBuilder, AndDescr>) descrBuilder);
         String paramName = (((null == this.calculation ? "" : this.calculation.toLowerCase()) + Instant.now() + "Count").toString().replace("-", "").replace(":", "").replace(".", ""));
-        ceDescrBuilder.pattern().id("$" + this.parentName.toLowerCase(), true).type(parentName).end();
+        String ruleId_p = "$" + this.parentName.toLowerCase();
+        if (checkRuleId(ceDescrBuilder, ruleId_p)) {
+            ceDescrBuilder.pattern().id("$" + this.parentName.toLowerCase(), true).type(parentName).end();
+        }
         PatternDescrBuilder patternDescrBuilder = ceDescrBuilder
                 .pattern().id("$" + paramName, true).type(List.class.getName());
 

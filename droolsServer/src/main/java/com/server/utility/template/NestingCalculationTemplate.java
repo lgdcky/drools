@@ -11,12 +11,14 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.server.tools.DroolsConvertToResource.checkRuleId;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
  * Date: 8/17/18
  * Time: 3:01 PM
- *
+ * <p>
  * 后期可调优
  */
 public class NestingCalculationTemplate {
@@ -37,7 +39,7 @@ public class NestingCalculationTemplate {
 
     private List<? extends BaseConditionTemplate> conditionList;
 
-    public NestingCalculationTemplate(){
+    public NestingCalculationTemplate() {
 
     }
 
@@ -78,20 +80,23 @@ public class NestingCalculationTemplate {
     }
 
     private DescrBuilder getDescrBuilder(String parentName, String objName, String calculation, String attribute, List<? extends BaseConditionTemplate> calConditionList, List<? extends BaseConditionTemplate> conditionList) {
-        String alias = (objName.toLowerCase() + Instant.now() + "Cal").toString().replace("-","").replace(":","").replace(".","");
+        String alias = (objName.toLowerCase() + Instant.now() + "Cal").toString().replace("-", "").replace(":", "").replace(".", "");
         String aliasType = Double.class.getName();
 
         CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder = ((CEDescrBuilder<RuleDescrBuilder, AndDescr>) descrBuilder);
-        ceDescrBuilder
-                .pattern().id("$" + parentName.toLowerCase(), true).type(parentName).end();
+        String ruleId_p = "$" + this.parentName.toLowerCase();
+        if (checkRuleId(ceDescrBuilder, ruleId_p)) {
+            ceDescrBuilder
+                    .pattern().id("$" + parentName.toLowerCase(), true).type(parentName).end();
+        }
         PatternDescrBuilder patternDescrBuilder = ceDescrBuilder
                 .pattern().id("$" + alias, true)
                 .type(aliasType);
 
 
-        patternDescrBuilder = mergeCondition(patternDescrBuilder, calConditionList, "$"+alias).from()
+        patternDescrBuilder = mergeCondition(patternDescrBuilder, calConditionList, "$" + alias).from()
                 .accumulate().init("Double total=0.00;")
-                .action("total +=" + "$" + objName.toLowerCase() + ".get" + calculation+"();")
+                .action("total +=" + "$" + objName.toLowerCase() + ".get" + calculation + "();")
                 .result("total")
                 .source()
                 .pattern()

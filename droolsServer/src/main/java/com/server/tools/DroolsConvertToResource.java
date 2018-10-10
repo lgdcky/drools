@@ -10,6 +10,7 @@ import com.server.utility.template.condition.*;
 import org.drools.compiler.lang.api.CEDescrBuilder;
 import org.drools.compiler.lang.api.RuleDescrBuilder;
 import org.drools.compiler.lang.descr.AndDescr;
+import org.drools.compiler.lang.descr.PatternDescr;
 import org.drools.core.io.impl.BaseResource;
 import org.drools.core.io.impl.ByteArrayResource;
 
@@ -212,5 +213,19 @@ public final class DroolsConvertToResource {
             }
         });
         return conditionList;
+    }
+
+    public static boolean checkRuleId(CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder, String objName) {
+        boolean flag = true;
+        List<PatternDescr> patternDescrList = ceDescrBuilder.getDescr().getAllPatternDescr();
+        if (patternDescrList.size() == 0) {
+            return flag;
+        }
+        for (PatternDescr patternDescr : patternDescrList) {
+            if (objName.equals(patternDescr.getIdentifier())) {
+                flag = false;
+            }
+        }
+        return flag;
     }
 }

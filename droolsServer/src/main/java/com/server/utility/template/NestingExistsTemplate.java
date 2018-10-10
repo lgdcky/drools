@@ -10,12 +10,14 @@ import org.drools.compiler.lang.descr.AndDescr;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.server.tools.DroolsConvertToResource.checkRuleId;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Dean Lu
  * Date: 8/16/18
  * Time: 9:41 AM
- *
+ * <p>
  * 后期可调优
  */
 public class NestingExistsTemplate {
@@ -32,7 +34,7 @@ public class NestingExistsTemplate {
 
     private List<? extends BaseConditionTemplate> conditionList;
 
-    public NestingExistsTemplate(){
+    public NestingExistsTemplate() {
 
     }
 
@@ -62,27 +64,31 @@ public class NestingExistsTemplate {
 
     public DescrBuilder setNestingExistsTemplate() {
         CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder = ((CEDescrBuilder<RuleDescrBuilder, AndDescr>) descrBuilder);
-        ceDescrBuilder.pattern().id("$" + this.parentName.toLowerCase(), true).type(parentName).end();
+        String ruleId_p = "$" + this.parentName.toLowerCase();
+        String ruleId_o = "$" + this.objName.toLowerCase();
+        if (checkRuleId(ceDescrBuilder, ruleId_p)) {
+            ceDescrBuilder.pattern().id(ruleId_p, true).type(parentName).end();
+        }
         PatternDescrBuilder patternDescrBuilder = ceDescrBuilder
-                .exists().and().pattern().id("$" + this.objName.toLowerCase(), true).type(objName);
+                .exists().and().pattern().id(ruleId_o, true).type(objName);
 
         List<String> rules = new ArrayList<>();
-        for(int i=0;i<conditionList.size();i++){
+        for (int i = 0; i < conditionList.size(); i++) {
             BaseConditionTemplate baseConditionTemplate = conditionList.get(i);
-            if(baseConditionTemplate.getLinkOp().equals(BaseConditionTemplate.AND)){
+            if (baseConditionTemplate.getLinkOp().equals(BaseConditionTemplate.AND)) {
                 rules.add(baseConditionTemplate.getReturnRule(null));
-            }else{
-                if(i>0) {
-                    rules.add(rules.get(i-1)+" "+BaseConditionTemplate.OR+" "+baseConditionTemplate.getReturnRule(null));
-                    rules.remove(i-1);
-                }else{
+            } else {
+                if (i > 0) {
+                    rules.add(rules.get(i - 1) + " " + BaseConditionTemplate.OR + " " + baseConditionTemplate.getReturnRule(null));
+                    rules.remove(i - 1);
+                } else {
                     rules.add(baseConditionTemplate.getReturnRule(null));
                 }
             }
         }
 
 
-        for(String rule:rules){
+        for (String rule : rules) {
             patternDescrBuilder.constraint(rule);
         }
 

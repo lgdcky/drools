@@ -1,14 +1,18 @@
 package com.server.utility.template;
 
+import com.server.tools.DroolsConvertToResource;
 import com.server.utility.template.condition.BaseConditionTemplate;
 import org.drools.compiler.lang.api.CEDescrBuilder;
 import org.drools.compiler.lang.api.DescrBuilder;
 import org.drools.compiler.lang.api.PatternDescrBuilder;
 import org.drools.compiler.lang.api.RuleDescrBuilder;
 import org.drools.compiler.lang.descr.AndDescr;
+import org.drools.compiler.lang.descr.PatternDescr;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.server.tools.DroolsConvertToResource.checkRuleId;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,8 +51,10 @@ public class SimpleRuleTemplate {
     }
 
     public DescrBuilder setSimpleRuleTemplate() {
-        PatternDescrBuilder patternDescrBuilder = ((CEDescrBuilder<RuleDescrBuilder, AndDescr>) descrBuilder)
-                .pattern().id("$" + this.objName.toLowerCase(), true).type(objName);
+        CEDescrBuilder<RuleDescrBuilder, AndDescr> ceDescrBuilder = ((CEDescrBuilder<RuleDescrBuilder, AndDescr>) descrBuilder);
+        String ruleId = "$" + this.objName.toLowerCase();
+        PatternDescrBuilder patternDescrBuilder = null;
+        patternDescrBuilder = ceDescrBuilder.pattern().id(ruleId, true).type(objName);
         List<String> rules = new ArrayList<>();
         for (int i = 0; i < conditionList.size(); i++) {
             BaseConditionTemplate baseConditionTemplate = conditionList.get(i);
